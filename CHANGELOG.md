@@ -20,3 +20,5 @@
 - Add LoRA smoke config, smoke test plan, and honest not-executed local result because CUDA is unavailable.
 - Polish Gradio demo copy and README/submission documentation.
 - Add screenshot capture plan without fake screenshots.
+- Add MG-0003 final evidence package: Colab runtime report, real local Gradio screenshots, LoRA smoke evidence, before/after evaluation evidence, final demo script, and final submission checklist.
+- Fix curated dataset validation script path handling for relative paths.
