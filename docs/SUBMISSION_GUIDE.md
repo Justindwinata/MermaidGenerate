@@ -55,3 +55,13 @@ State clearly:
 ## Evidence
 
 Use `docs/SCREENSHOT_CAPTURE_PLAN.md` as the screenshot checklist. Add screenshots only after a real run. If no GPU run was executed, submit the plan and `docs/LORA_SMOKE_TEST_RESULT.md` with the honest not-executed status.
+
+MG-0003 evidence files are stored in `docs/evidence/`:
+
+- `COLAB_RUNTIME_REPORT.md`
+- `SCREENSHOT_EVIDENCE_REPORT.md`
+- `LORA_SMOKE_TRAINING_EVIDENCE.md`
+- `BEFORE_AFTER_LORA_EVALUATION.md`
+- `screenshots/`
+
+Use `docs/FINAL_DEMO_SCRIPT.md` for the live demo flow and `docs/FINAL_SUBMISSION_CHECKLIST.md` as the final package checklist.

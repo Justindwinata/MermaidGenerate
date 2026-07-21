@@ -122,7 +122,27 @@ Baseline notes are documented in `docs/EVALUATION_BASELINE_REPORT.md`.
 
 ## Demo Evidence
 
-Screenshots were not faked. The capture plan is documented in `docs/SCREENSHOT_CAPTURE_PLAN.md`. Real screenshots should be added only after running the notebook/UI in the actual demo environment.
+Screenshots were not faked. MG-0003 captured real local Gradio screenshots under `docs/evidence/screenshots/` for:
+
+- generator empty state
+- dataset upload tab
+- dataset validation result
+- training controls
+- ready state/final overview
+
+Screenshots for real generation results, training logs, and adapter download still require a Colab/model/training run.
+
+Evidence docs:
+
+- `docs/evidence/COLAB_RUNTIME_REPORT.md`
+- `docs/evidence/SCREENSHOT_EVIDENCE_REPORT.md`
+- `docs/evidence/LORA_SMOKE_TRAINING_EVIDENCE.md`
+- `docs/evidence/BEFORE_AFTER_LORA_EVALUATION.md`
+
+Final demo materials:
+
+- `docs/FINAL_DEMO_SCRIPT.md`
+- `docs/FINAL_SUBMISSION_CHECKLIST.md`
 
 ## Limitations
 
@@ -149,5 +169,8 @@ Screenshots were not faked. The capture plan is documented in `docs/SCREENSHOT_C
 - `docs/LORA_SMOKE_TEST_RESULT.md`
 - `docs/SCREENSHOT_CAPTURE_PLAN.md`
 - `docs/SUBMISSION_GUIDE.md`
+- `docs/FINAL_DEMO_SCRIPT.md`
+- `docs/FINAL_SUBMISSION_CHECKLIST.md`
+- `docs/evidence/`
 - `docs/REFERENCE_NOTEBOOK_INSPECTION.md`
 - `docs/DECISION_LOG.md`
