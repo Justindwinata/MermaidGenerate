@@ -8,6 +8,8 @@ import uuid
 from dataclasses import asdict, dataclass, field
 from typing import Any
 
+from .adapter_manager import AdapterMetadata, activate_training_result
+from .config import DEFAULT_MODEL_ID
 from .training import FineTuningConfig, TrainingResult, run_fine_tuning
 
 
@@ -19,6 +21,7 @@ class TrainingJobState:
     logs: list[str] = field(default_factory=list)
     latest_metrics: dict[str, Any] = field(default_factory=dict)
     result: TrainingResult | None = None
+    activation: dict[str, Any] | None = None
     cancel_requested: bool = False
     error: str | None = None
     created_at: float = field(default_factory=time.time)
@@ -141,6 +144,22 @@ class TrainingManager:
             if self._active_job_id is not None:
                 raise RuntimeError("Cannot clear state while training is running.")
             self._jobs.clear()
+
+    def activate_completed_result(
+        self,
+        job_id: str,
+        *,
+        model_id: str = DEFAULT_MODEL_ID,
+    ) -> AdapterMetadata:
+        with self._lock:
+            state = self._jobs.get(job_id)
+            if state is None or state.result is None:
+                raise KeyError(f"Completed training result not found: {job_id}")
+            result = state.result
+        metadata = activate_training_result(result, model_id=model_id)
+        with self._lock:
+            self._jobs[job_id].activation = metadata.as_dict()
+        return metadata
 
 
 TRAINING_MANAGER = TrainingManager()
