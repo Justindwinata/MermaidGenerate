@@ -1,0 +1,29 @@
+from mermaid_generate.inference import (
+    build_generation_prompt,
+    detect_diagram_type_from_prompt,
+    normalize_diagram_type,
+)
+from mermaid_generate.mermaid_validator import postprocess_mermaid_output
+
+
+def test_prompt_template_requests_code_only() -> None:
+    prompt = build_generation_prompt("Create a Venn about A and B", "venn")
+
+    assert "Return only valid Mermaid code" in prompt
+    assert "Diagram type: Venn Diagram" in prompt
+    assert "output should start with venn" in prompt
+
+
+def test_auto_detect_prefers_venn_for_compare() -> None:
+    assert detect_diagram_type_from_prompt("Compare students and workers") == "venn"
+
+
+def test_normalize_diagram_type() -> None:
+    assert normalize_diagram_type("Mind Map") == "mindmap"
+    assert normalize_diagram_type("venn-beta") == "venn"
+
+
+def test_safe_prefix_repair_for_venn() -> None:
+    raw = 'set A["A"]\nset B["B"]\nunion A,B["AB"]'
+
+    assert postprocess_mermaid_output(raw, "venn").startswith("venn\n")
