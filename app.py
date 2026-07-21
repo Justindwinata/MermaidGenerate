@@ -23,7 +23,7 @@ from mermaid_generate.training_manager import TRAINING_MANAGER
 APP_TITLE = "MermaidGenerate - Local AI Mermaid Diagram Generator"
 APP_SUBTITLE = (
     "Generate Mind Map and Venn Diagram Mermaid code using a locally "
-    "fine-tuned Transformers model."
+    "fine-tuned Transformers/PyTorch model."
 )
 
 APP_CSS = """
@@ -56,7 +56,11 @@ LAST_TRAINING_JOB_ID: str | None = None
 
 def readable_model_status() -> str:
     metadata = current_adapter_metadata()
-    return metadata.status
+    suffix = (
+        "\nRuntime: Transformers + PyTorch. "
+        "Venn preview renders assignment-facing 'venn' code through Mermaid 'venn-beta'."
+    )
+    return metadata.status + suffix
 
 
 def normalize_ui_diagram_type(value: str) -> str:
@@ -146,6 +150,7 @@ def validate_upload(file_obj: Any) -> tuple[list[list[Any]], str, str, str, str]
         for sample in report.valid_data[:10]
     ]
     summary = (
+        f"File: {path.name}\n"
         f"Total: {report.total_samples}\n"
         f"Valid: {report.valid_samples}\n"
         f"Invalid: {report.invalid_samples}\n"
@@ -201,7 +206,11 @@ def start_training_from_ui(
         LAST_TRAINING_JOB_ID = TRAINING_MANAGER.start(valid_data, config)
         return (
             "training",
-            f"Training job started: {LAST_TRAINING_JOB_ID}",
+            (
+                f"Training job started: {LAST_TRAINING_JOB_ID}\n"
+                "Use Refresh Status to read real progress/loss logs. "
+                "Do not close the runtime during training."
+            ),
             LAST_TRAINING_JOB_ID,
             None,
             readable_model_status(),
@@ -271,6 +280,11 @@ def build_app() -> Any:
 
     with gr.Blocks(title=APP_TITLE, css=APP_CSS) as demo:
         gr.Markdown(f"# {APP_TITLE}\n{APP_SUBTITLE}")
+        gr.Markdown(
+            "Primary runtime: **Transformers + PyTorch + PEFT**. "
+            "No paid API is used. Venn diagrams are generated as `venn` for the assignment "
+            "and rendered internally through Mermaid's current `venn-beta` preview syntax."
+        )
         with gr.Tabs():
             with gr.Tab("Generator Mermaid"):
                 model_status = gr.Textbox(
@@ -295,8 +309,10 @@ def build_app() -> Any:
                             clear_button = gr.Button("Clear")
                         gr.Examples(
                             examples=[
-                                ["Mind Map", "Buat mind map tentang strategi belajar AI."],
-                                ["Venn Diagram", "Create a Venn diagram comparing students, workers, and entrepreneurs."],
+                                ["Mind Map", "Buat mind map tentang strategi belajar AI untuk mahasiswa informatika."],
+                                ["Mind Map", "Create a mind map about digital marketing for a small food business."],
+                                ["Venn Diagram", "Create a Venn diagram comparing students, employees, and entrepreneurs."],
+                                ["Venn Diagram", "Buat diagram Venn tentang Instagram, TikTok, dan WhatsApp marketing."],
                                 ["Auto Detect", "Compare cloud computing, edge computing, and on-premise infrastructure."],
                             ],
                             inputs=[diagram_type, prompt],
@@ -342,7 +358,8 @@ def build_app() -> Any:
 
             with gr.Tab("Dataset & Fine-Tuning"):
                 gr.Markdown(
-                    "Upload JSON/JSONL with messages, prompt-completion, or instruction-output samples."
+                    "Upload JSON/JSONL with messages, prompt-completion, or instruction-output samples. "
+                    "For the MG-0002 smoke demo, use `datasets/curated/mixed_mindmap_venn_curated.jsonl`."
                 )
                 dataset_file = gr.File(
                     label="Dataset upload",
@@ -383,6 +400,11 @@ def build_app() -> Any:
                 )
 
                 gr.Markdown("### Fine-Tuning")
+                gr.Markdown(
+                    "Recommended LoRA smoke values: 1 epoch, batch size 1, gradient accumulation 4, "
+                    "max sequence length 512, learning rate 2e-4, validation split 0.1. "
+                    "Training is real; progress appears after clicking Refresh Status."
+                )
                 with gr.Row():
                     mode = gr.Dropdown(
                         ["LoRA", "QLoRA 4-bit", "Full Fine-Tuning"],
