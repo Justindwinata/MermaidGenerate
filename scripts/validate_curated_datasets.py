@@ -23,13 +23,19 @@ DEFAULT_DATASETS = [
 
 
 def summarize(path: Path) -> dict[str, object]:
+    path = path if path.is_absolute() else ROOT / path
+    path = path.resolve()
     report = validate_dataset_file(path)
     language_counts = Counter(
         sample.get("language", "unknown")
         for sample in report.valid_data
     )
+    try:
+        display_path = str(path.relative_to(ROOT))
+    except ValueError:
+        display_path = str(path)
     return {
-        "file": str(path.relative_to(ROOT)),
+        "file": display_path,
         "total_samples": report.total_samples,
         "valid_samples": report.valid_samples,
         "invalid_samples": report.invalid_samples,
