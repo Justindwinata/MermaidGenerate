@@ -1,0 +1,18 @@
+{
+  "mode": "LoRA",
+  "dataset_path": "datasets/curated/mixed_mindmap_venn_curated.jsonl",
+  "max_samples": 32,
+  "epochs": 1,
+  "batch_size": 1,
+  "gradient_accumulation": 4,
+  "max_sequence_length": 512,
+  "learning_rate": 0.0002,
+  "validation_split": 0.1,
+  "model_id": "TinyLlama/TinyLlama-1.1B-Chat-v1.0",
+  "expected_output_root": "outputs/adapters/",
+  "notes": [
+    "Use a Colab GPU runtime for this smoke test.",
+    "Do not claim training success unless a real run completes.",
+    "If CUDA OOM occurs, reduce max_samples or max_sequence_length."
+  ]
+}
