@@ -1,0 +1,12 @@
+torch>=2.2
+transformers>=4.52,<5
+datasets>=3,<5
+peft==0.18.1
+accelerate>=1.2,<2
+bitsandbytes>=0.44,<1; platform_system != "Darwin"
+safetensors>=0.4
+sentencepiece>=0.2
+gradio>=4.44
+pandas>=2.0
+numpy>=1.24
+pytest>=8.0
