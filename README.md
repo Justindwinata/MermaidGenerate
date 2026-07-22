@@ -152,6 +152,7 @@ Evidence docs:
 - `docs/evidence/SCREENSHOT_EVIDENCE_REPORT.md`
 - `docs/evidence/LORA_SMOKE_TRAINING_EVIDENCE.md`
 - `docs/evidence/BEFORE_AFTER_LORA_EVALUATION.md`
+- `docs/evidence/LOCAL_UI_REVISION_EVIDENCE.md`
 
 Final demo materials:
 

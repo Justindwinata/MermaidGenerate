@@ -24,3 +24,6 @@
 - Fix curated dataset validation script path handling for relative paths.
 - Add MG-0004 render fix: stronger prompt templates, robust Mermaid extraction, Venn and Mind Map repair compilers, stricter Venn syntax, dataset alignment, final-code UI output, and render-fix evidence screenshots.
 - Fix Gradio Mermaid preview rendering by moving Mermaid.js execution into an iframe `srcdoc` renderer; local evidence confirms visible Mind Map and Venn SVG output.
+- Add MG-0005 local-first launch support with `--local`, `--share`, `--colab`, `--host`, and `--port`.
+- Redesign the Gradio UI with a navy/orange/black theme, cleaner Generator and Dataset & Fine-Tuning layouts, and dataset validation cards.
+- Document local laptop and Colab/share launch modes with local smoke evidence.

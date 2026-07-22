@@ -11,6 +11,7 @@ Summary date: 2026-07-22 Asia/Jakarta
 - Local smoke tests now produce valid Mind Map and Venn code through fallback repair.
 - Render-fix screenshots exist under `docs/evidence/screenshots/fix/`.
 - A follow-up local browser smoke test confirmed that the iframe-based preview renders visible Mind Map and Venn SVG diagrams.
+- MG-0005 local-first launch smoke test returned `HTTP/1.1 200 OK` from `http://127.0.0.1:7860`.
 
 ## What Was Fixed
 
@@ -22,6 +23,8 @@ Summary date: 2026-07-22 Asia/Jakarta
 - UI main code box shows final valid Mermaid code.
 - Raw model output is available only in the advanced debug section.
 - Gradio preview no longer depends on direct dynamic `<script>` execution in the parent `gr.HTML`; it uses an iframe `srcdoc` document that loads Mermaid.js and renders SVG.
+- Local launch now defaults to `python app.py --local` at `http://127.0.0.1:7860`, with optional `--share` and `--colab` modes.
+- The Gradio UI now uses a navy/orange/black theme while keeping the existing two-tab workflow.
 
 ## Latest Render Evidence
 
@@ -31,6 +34,16 @@ Summary date: 2026-07-22 Asia/Jakarta
 - rendered Venn diagram for Instagram, TikTok, and WhatsApp marketing;
 - Venn renderer conversion through `venn-beta`;
 - final code and renderer-facing code details available below each preview.
+
+## Local UI Revision Evidence
+
+`docs/evidence/LOCAL_UI_REVISION_EVIDENCE.md` records:
+
+- local launch command;
+- local startup banner;
+- `curl -I` response showing `HTTP/1.1 200 OK`;
+- preserved feature checklist;
+- local vs Colab/share mode behavior.
 
 ## Remaining Truth
 

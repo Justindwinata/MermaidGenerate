@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import os
 import sys
 from dataclasses import dataclass
 from pathlib import Path
@@ -10,6 +11,10 @@ from typing import Any
 
 ROOT_DIR = Path(__file__).resolve().parent
 SRC_DIR = ROOT_DIR / "src"
+MPL_CACHE_DIR = Path(os.environ.get("MPLCONFIGDIR", "/tmp/mermaidgenerate-matplotlib"))
+MPL_CACHE_DIR.mkdir(parents=True, exist_ok=True)
+os.environ.setdefault("MPLCONFIGDIR", str(MPL_CACHE_DIR))
+os.environ.setdefault("GRADIO_ANALYTICS_ENABLED", "False")
 if str(SRC_DIR) not in sys.path:
     sys.path.insert(0, str(SRC_DIR))
 
@@ -284,16 +289,16 @@ def resolve_launch_config(args: argparse.Namespace) -> LaunchConfig:
 
 
 def print_launch_banner(config: LaunchConfig) -> None:
-    print("MermaidGenerate starting...")
-    print(f"Mode: {config.mode}")
-    print(f"Host: {config.host}")
-    print(f"Port: {config.port}")
-    print(f"Local URL: {config.local_url}")
+    print("MermaidGenerate starting...", flush=True)
+    print(f"Mode: {config.mode}", flush=True)
+    print(f"Host: {config.host}", flush=True)
+    print(f"Port: {config.port}", flush=True)
+    print(f"Local URL: {config.local_url}", flush=True)
     if config.share:
-        print("Gradio share/public link: enabled")
+        print("Gradio share/public link: enabled", flush=True)
     else:
-        print("Gradio share/public link: disabled")
-        print("Use --share or --colab for a public Gradio link.")
+        print("Gradio share/public link: disabled", flush=True)
+        print("Use --share or --colab for a public Gradio link.", flush=True)
 
 
 def readable_model_status() -> str:
@@ -560,9 +565,15 @@ def clear_training_state() -> tuple[str, str, str, str | None]:
 
 
 def build_app() -> Any:
+    import inspect
+
     import gradio as gr
 
-    with gr.Blocks(title=APP_TITLE, css=APP_CSS) as demo:
+    blocks_kwargs: dict[str, Any] = {"title": APP_TITLE}
+    if "css" in inspect.signature(gr.Blocks).parameters:
+        blocks_kwargs["css"] = APP_CSS
+
+    with gr.Blocks(**blocks_kwargs) as demo:
         gr.Markdown(
             f"""
 <div class="mg-hero">
@@ -817,16 +828,21 @@ def build_parser() -> argparse.ArgumentParser:
 
 
 def main() -> None:
+    import inspect
+
     parser = build_parser()
     args = parser.parse_args()
     config = resolve_launch_config(args)
     print_launch_banner(config)
     app = build_app()
-    app.launch(
-        server_name=config.host,
-        server_port=config.port,
-        share=config.share,
-    )
+    launch_kwargs: dict[str, Any] = {
+        "server_name": config.host,
+        "server_port": config.port,
+        "share": config.share,
+    }
+    if "css" in inspect.signature(app.launch).parameters:
+        launch_kwargs["css"] = APP_CSS
+    app.launch(**launch_kwargs)
 
 
 if __name__ == "__main__":
