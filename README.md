@@ -144,6 +144,25 @@ Final demo materials:
 - `docs/FINAL_DEMO_SCRIPT.md`
 - `docs/FINAL_SUBMISSION_CHECKLIST.md`
 
+## MG-0004 Render Fix
+
+Manual Colab testing showed LoRA training completed and an adapter ZIP was generated, but raw generation still produced invalid Mermaid. The fix adds:
+
+- strict diagram-specific prompt templates
+- robust first-diagram extraction
+- Venn repair/compiler fallback
+- Mind Map repair/compiler fallback
+- stricter Venn syntax validation
+- renderer conversion from assignment-facing `venn` to Mermaid `venn-beta`
+- UI display of final valid code instead of invalid raw output
+
+Evidence:
+
+- `docs/evidence/GENERATION_FAILURE_ANALYSIS.md`
+- `docs/evidence/GENERATOR_RUNTIME_EVIDENCE.md`
+- `docs/evidence/FINAL_EVIDENCE_SUMMARY.md`
+- `docs/evidence/screenshots/fix/`
+
 ## Limitations
 
 - Colab GPU smoke training was not executed locally during MG-0002 because CUDA is unavailable in the local environment.

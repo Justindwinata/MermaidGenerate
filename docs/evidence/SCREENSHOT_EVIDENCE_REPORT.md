@@ -20,6 +20,12 @@ Real local Gradio screenshots were captured from `http://127.0.0.1:7903/`.
   - Real screenshot of the ready/validated training state. It does not show real training logs because training was not executed.
 - `docs/evidence/screenshots/10_final_demo_overview.png`
   - Real screenshot of the final local UI overview after dataset validation.
+- `docs/evidence/screenshots/fix/01_mindmap_render_success.png`
+  - Real local render-fix screenshot using final valid Mind Map code.
+- `docs/evidence/screenshots/fix/02_venn_render_success.png`
+  - Real local render-fix screenshot using final valid Venn code with renderer conversion.
+- `docs/evidence/screenshots/fix/03_validation_success.png`
+  - Real local screenshot showing valid final code and rendered previews.
 
 ## Screenshots Not Captured
 

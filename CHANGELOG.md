@@ -22,3 +22,4 @@
 - Add screenshot capture plan without fake screenshots.
 - Add MG-0003 final evidence package: Colab runtime report, real local Gradio screenshots, LoRA smoke evidence, before/after evaluation evidence, final demo script, and final submission checklist.
 - Fix curated dataset validation script path handling for relative paths.
+- Add MG-0004 render fix: stronger prompt templates, robust Mermaid extraction, Venn and Mind Map repair compilers, stricter Venn syntax, dataset alignment, final-code UI output, and render-fix evidence screenshots.

@@ -26,6 +26,9 @@
 - [x] LoRA smoke training evidence report exists.
 - [x] Before/after LoRA evaluation evidence report exists.
 - [x] Final demo script exists.
+- [x] Generation failure analysis exists.
+- [x] Generator runtime evidence exists.
+- [x] Render-fix screenshots exist.
 
 ## LoRA Smoke Test Status
 
@@ -53,3 +56,4 @@ Current status: not completed locally because CUDA is unavailable.
 - Venn rendering depends on Mermaid.js support.
 - llama.cpp/GGUF remains future optional compatibility.
 - No paid API is used.
+- Repair fallback is used to guarantee valid Mermaid syntax when raw model output is invalid.

@@ -142,3 +142,9 @@ State:
 - Venn rendering depends on Mermaid.js support
 - llama.cpp/GGUF is future optional compatibility
 - no paid API is used
+
+## 19. Explain Render Reliability Fix
+
+Say:
+
+"The LoRA adapter can still produce imperfect raw text after a short smoke training run. To make the demo reliable, the app now extracts the first Mermaid diagram, repairs or compiles a deterministic valid fallback, validates it, and only then renders. The main code box shows final valid Mermaid code. Raw model output is available only in the debug section."
