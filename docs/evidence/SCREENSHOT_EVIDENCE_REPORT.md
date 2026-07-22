@@ -26,6 +26,8 @@ Real local Gradio screenshots were captured from `http://127.0.0.1:7903/`.
   - Real local render-fix screenshot using final valid Venn code with renderer conversion.
 - `docs/evidence/screenshots/fix/03_validation_success.png`
   - Real local screenshot showing valid final code and rendered previews.
+- `docs/evidence/screenshots/fix/05_iframe_preview_render_success.png`
+  - Real local browser screenshot showing the iframe-based preview rendering visible Mind Map and Venn SVG diagrams with the same `build_mermaid_preview_html` helper used by Gradio.
 
 ## Screenshots Not Captured
 
@@ -33,17 +35,13 @@ The following were not captured because they require a real Colab/model/training
 
 - `01_notebook_overview.png`
   - Requires opening the notebook in Colab or a browser notebook viewer.
-- `03_generator_mindmap_result.png`
-  - Requires real model inference or a completed demo run.
-- `04_generator_venn_result.png`
-  - Requires real model inference or a completed demo run.
 - `09_adapter_download_state.png`
   - Requires successful real LoRA/QLoRA training and adapter ZIP generation.
 
 ## Notes
 
 - No fake screenshots were created.
-- The captured screenshots prove the local Gradio app launches, tabs render, curated dataset upload works, dataset validation works, and training controls are visible.
+- The captured screenshots prove the local Gradio app launches, tabs render, curated dataset upload works, dataset validation works, training controls are visible, and the patched iframe renderer can produce visible Mind Map and Venn SVG diagrams.
 - They do not prove Colab GPU execution, successful LoRA training, adapter ZIP creation, or before/after model improvement.
 
 ## Manual Screenshot Checklist

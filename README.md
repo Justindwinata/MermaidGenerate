@@ -163,6 +163,10 @@ Evidence:
 - `docs/evidence/FINAL_EVIDENCE_SUMMARY.md`
 - `docs/evidence/screenshots/fix/`
 
+Latest render fix evidence:
+
+- `docs/evidence/screenshots/fix/05_iframe_preview_render_success.png` shows both Mind Map and Venn diagrams rendered through the iframe-based Mermaid preview. This fixes the manual retest issue where valid Mermaid code appeared but no SVG diagram was visible in Gradio.
+
 ## Limitations
 
 - Colab GPU smoke training was not executed locally during MG-0002 because CUDA is unavailable in the local environment.

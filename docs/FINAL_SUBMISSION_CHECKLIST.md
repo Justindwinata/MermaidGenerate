@@ -28,7 +28,7 @@
 - [x] Final demo script exists.
 - [x] Generation failure analysis exists.
 - [x] Generator runtime evidence exists.
-- [x] Render-fix screenshots exist.
+- [x] Render-fix screenshots exist, including iframe preview evidence for visible Mind Map and Venn SVG diagrams.
 
 ## LoRA Smoke Test Status
 

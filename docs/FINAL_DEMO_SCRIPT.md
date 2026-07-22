@@ -52,7 +52,7 @@ Show:
 
 - Mermaid code starts with `mindmap`
 - validation result
-- rendered preview
+- rendered SVG preview in the Mermaid iframe panel
 
 ## 8. Generate Venn Diagram
 
@@ -64,7 +64,8 @@ Show:
 
 - Mermaid code starts with `venn`
 - validation result
-- rendered preview
+- rendered SVG preview in the Mermaid iframe panel
+- explain that the UI displays `venn` for assignment code while the iframe renders it as Mermaid `venn-beta`
 
 ## 9. Open Dataset & Fine-Tuning Tab
 
