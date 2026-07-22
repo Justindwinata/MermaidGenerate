@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import sys
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
@@ -52,6 +53,50 @@ DATASET_STATE: dict[str, Any] = {
     "valid_data": [],
 }
 LAST_TRAINING_JOB_ID: str | None = None
+
+
+@dataclass(frozen=True)
+class LaunchConfig:
+    mode: str
+    host: str
+    port: int
+    share: bool
+
+    @property
+    def local_url(self) -> str:
+        return f"http://{self.host}:{self.port}"
+
+
+def resolve_launch_config(args: argparse.Namespace) -> LaunchConfig:
+    host = str(args.host)
+    port = int(args.port)
+    share = bool(args.share)
+    mode = "local"
+
+    if getattr(args, "colab", False):
+        mode = "colab"
+        share = True
+        if host == "127.0.0.1":
+            host = "0.0.0.0"
+    elif share:
+        mode = "share"
+    elif getattr(args, "local", False):
+        mode = "local"
+
+    return LaunchConfig(mode=mode, host=host, port=port, share=share)
+
+
+def print_launch_banner(config: LaunchConfig) -> None:
+    print("MermaidGenerate starting...")
+    print(f"Mode: {config.mode}")
+    print(f"Host: {config.host}")
+    print(f"Port: {config.port}")
+    print(f"Local URL: {config.local_url}")
+    if config.share:
+        print("Gradio share/public link: enabled")
+    else:
+        print("Gradio share/public link: disabled")
+        print("Use --share or --colab for a public Gradio link.")
 
 
 def readable_model_status() -> str:
@@ -497,12 +542,26 @@ def build_app() -> Any:
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=APP_TITLE)
-    parser.add_argument("--host", default="127.0.0.1", help="Host interface.")
-    parser.add_argument("--port", default=7860, type=int, help="Port.")
+    parser.add_argument(
+        "--host",
+        default="127.0.0.1",
+        help="Host interface. Defaults to 127.0.0.1 for local laptop use.",
+    )
+    parser.add_argument("--port", default=7860, type=int, help="Port. Defaults to 7860.")
+    parser.add_argument(
+        "--local",
+        action="store_true",
+        help="Run as a local web app at http://127.0.0.1:7860 by default.",
+    )
     parser.add_argument(
         "--share",
         action="store_true",
         help="Create a Gradio share URL. Useful in Colab.",
+    )
+    parser.add_argument(
+        "--colab",
+        action="store_true",
+        help="Run with Colab-friendly Gradio sharing enabled.",
     )
     return parser
 
@@ -510,8 +569,14 @@ def build_parser() -> argparse.ArgumentParser:
 def main() -> None:
     parser = build_parser()
     args = parser.parse_args()
+    config = resolve_launch_config(args)
+    print_launch_banner(config)
     app = build_app()
-    app.launch(server_name=args.host, server_port=args.port, share=args.share)
+    app.launch(
+        server_name=config.host,
+        server_port=config.port,
+        share=config.share,
+    )
 
 
 if __name__ == "__main__":
