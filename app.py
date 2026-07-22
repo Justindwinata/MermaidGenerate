@@ -204,6 +204,44 @@ code,
   border-top: 1px solid var(--mg-border);
   padding-top: 12px;
 }
+.mg-card-grid {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(120px, 1fr));
+  gap: 10px;
+  margin: 10px 0 14px;
+}
+.mg-metric-card {
+  border: 1px solid var(--mg-border);
+  border-radius: 8px;
+  padding: 12px;
+  background: linear-gradient(180deg, rgba(23, 32, 51, 0.96), rgba(15, 23, 42, 0.96));
+}
+.mg-metric-label {
+  color: var(--mg-muted);
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+.mg-metric-value {
+  color: var(--mg-text);
+  font-size: 24px;
+  font-weight: 850;
+  margin-top: 4px;
+}
+.mg-metric-value.success {
+  color: var(--mg-success);
+}
+.mg-metric-value.warning {
+  color: var(--mg-orange-soft);
+}
+.mg-metric-value.error {
+  color: var(--mg-error);
+}
+@media (max-width: 900px) {
+  .mg-card-grid {
+    grid-template-columns: repeat(2, minmax(120px, 1fr));
+  }
+}
 """
 
 DATASET_STATE: dict[str, Any] = {
@@ -332,10 +370,48 @@ def clear_generator() -> tuple[str, str, str, str, str]:
     return "", build_mermaid_preview_html(""), "Waiting for generation.", "0.00 s", ""
 
 
-def validate_upload(file_obj: Any) -> tuple[list[list[Any]], str, str, str, str]:
+def build_validation_cards_html(report: Any | None = None) -> str:
+    if report is None:
+        metrics = [
+            ("Total", "-"),
+            ("Valid", "-"),
+            ("Invalid", "-"),
+            ("Warnings", "-"),
+            ("Duplicates", "-"),
+            ("Train Ready", "-"),
+        ]
+    else:
+        metrics = [
+            ("Total", report.total_samples),
+            ("Valid", report.valid_samples),
+            ("Invalid", report.invalid_samples),
+            ("Warnings", report.warning_samples),
+            ("Duplicates", report.duplicate_count),
+            ("Train Ready", str(report.train_ready)),
+        ]
+    cards = []
+    for label, value in metrics:
+        value_text = str(value)
+        value_class = ""
+        if label == "Valid" and value_text not in {"-", "0"}:
+            value_class = " success"
+        elif label in {"Invalid", "Warnings", "Duplicates"} and value_text not in {"-", "0"}:
+            value_class = " error" if label == "Invalid" else " warning"
+        elif label == "Train Ready":
+            value_class = " success" if value_text == "True" else " warning"
+        cards.append(
+            '<div class="mg-metric-card">'
+            f'<div class="mg-metric-label">{label}</div>'
+            f'<div class="mg-metric-value{value_class}">{value_text}</div>'
+            "</div>"
+        )
+    return '<div class="mg-card-grid">' + "".join(cards) + "</div>"
+
+
+def validate_upload(file_obj: Any) -> tuple[list[list[Any]], str, str, str, str, str]:
     if file_obj is None:
         DATASET_STATE.update({"path": None, "report": None, "valid_data": []})
-        return [], "No dataset uploaded.", "{}", "{}", "No invalid rows."
+        return [], build_validation_cards_html(), "No dataset uploaded.", "{}", "{}", "No invalid rows."
 
     path = Path(getattr(file_obj, "name", str(file_obj)))
     report = validate_dataset_file(path)
@@ -372,6 +448,7 @@ def validate_upload(file_obj: Any) -> tuple[list[list[Any]], str, str, str, str]
     ) or "No invalid rows."
     return (
         preview_rows,
+        build_validation_cards_html(report),
         summary,
         str(report.diagram_type_counts),
         str(report.source_format_counts),
@@ -486,11 +563,17 @@ def build_app() -> Any:
     import gradio as gr
 
     with gr.Blocks(title=APP_TITLE, css=APP_CSS) as demo:
-        gr.Markdown(f"# {APP_TITLE}\n{APP_SUBTITLE}")
         gr.Markdown(
-            "Primary runtime: **Transformers + PyTorch + PEFT**. "
-            "No paid API is used. Venn diagrams are generated as `venn` for the assignment "
-            "and rendered internally through Mermaid's current `venn-beta` preview syntax."
+            f"""
+<div class="mg-hero">
+  <h1>{APP_TITLE}</h1>
+  <p>{APP_SUBTITLE}</p>
+  <p>Primary runtime: <strong>Transformers + PyTorch + PEFT</strong>. No paid API is used.
+  Venn diagrams are generated as <code>venn</code> and rendered internally through Mermaid
+  <code>venn-beta</code>.</p>
+</div>
+""",
+            elem_classes=["mg-hero-wrap"],
         )
         with gr.Tabs():
             with gr.Tab("Generator Mermaid"):
@@ -498,9 +581,11 @@ def build_app() -> Any:
                     value=readable_model_status,
                     label="Active model/adaptor status",
                     interactive=False,
+                    elem_classes=["mg-status"],
                 )
                 with gr.Row():
                     with gr.Column(scale=1):
+                        gr.Markdown("### Prompt Controls", elem_classes=["mg-section-title"])
                         diagram_type = gr.Dropdown(
                             ["Mind Map", "Venn Diagram", "Auto Detect"],
                             value="Auto Detect",
@@ -525,6 +610,7 @@ def build_app() -> Any:
                             inputs=[diagram_type, prompt],
                         )
                     with gr.Column(scale=1):
+                        gr.Markdown("### Generation Status", elem_classes=["mg-section-title"])
                         max_new_tokens = gr.Slider(64, 512, value=320, step=16, label="max_new_tokens")
                         temperature = gr.Slider(0.0, 1.0, value=0.1, step=0.05, label="temperature")
                         top_p = gr.Slider(0.1, 1.0, value=0.85, step=0.05, label="top_p")
@@ -577,6 +663,10 @@ def build_app() -> Any:
                     file_types=[".json", ".jsonl"],
                 )
                 validate_button = gr.Button("Validate Dataset", variant="primary")
+                validation_cards = gr.HTML(
+                    value=build_validation_cards_html(),
+                    label="Validation cards",
+                )
                 dataset_preview = gr.Dataframe(
                     headers=[
                         "id",
@@ -603,6 +693,7 @@ def build_app() -> Any:
                     inputs=[dataset_file],
                     outputs=[
                         dataset_preview,
+                        validation_cards,
                         validation_summary,
                         diagram_distribution,
                         source_distribution,
@@ -610,7 +701,7 @@ def build_app() -> Any:
                     ],
                 )
 
-                gr.Markdown("### Fine-Tuning")
+                gr.Markdown("### Fine-Tuning", elem_classes=["mg-section-title"])
                 gr.Markdown(
                     "Recommended LoRA smoke values: 1 epoch, batch size 1, gradient accumulation 4, "
                     "max sequence length 512, learning rate 2e-4, validation split 0.1. "
