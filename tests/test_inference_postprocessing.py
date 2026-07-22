@@ -25,7 +25,7 @@ def test_normalize_diagram_type() -> None:
 
 
 def test_safe_prefix_repair_for_venn() -> None:
-    raw = 'set A["A"]\nset B["B"]\nunion A,B["AB"]'
+    raw = 'set A["A"]\nset B["B"]\nunion A,B\n  text "AB"'
 
     assert postprocess_mermaid_output(raw, "venn").startswith("venn\n")
 

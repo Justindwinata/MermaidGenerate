@@ -217,17 +217,22 @@ def validate_mindmap(code: str) -> list[str]:
 def validate_venn(code: str) -> list[str]:
     errors: list[str] = []
     renderer_code = normalize_venn_for_renderer(code)
-    lines = [line.strip() for line in renderer_code.splitlines() if line.strip()]
+    lines = [line.rstrip() for line in renderer_code.splitlines() if line.strip()]
     if not lines or lines[0].lower() != "venn-beta":
         errors.append("Venn output must start with venn or venn-beta.")
     set_ids: set[str] = set()
     union_count = 0
-    for line in lines[1:]:
-        if line.lower().startswith("set "):
+    index = 1
+    while index < len(lines):
+        line = lines[index].strip()
+        lowered = line.lower()
+        if lowered.startswith("set "):
             parts = line.split(maxsplit=2)
             if len(parts) >= 2:
                 set_ids.add(parts[1].split("[", 1)[0].split(":", 1)[0].strip().strip('"'))
-        elif line.lower().startswith("union "):
+            index += 1
+            continue
+        if lowered.startswith("union "):
             union_count += 1
             body = line.split(maxsplit=1)[1]
             ids_part = body.split("[", 1)[0].split(":", 1)[0]
@@ -237,6 +242,19 @@ def validate_venn(code: str) -> list[str]:
             missing = [item for item in referenced if item not in set_ids]
             if missing:
                 errors.append(f"Venn union references undefined set(s): {', '.join(missing)}.")
+            if "[" in body and "]" in body:
+                errors.append("Venn union labels must use an indented text line, not bracket syntax.")
+            if index + 1 >= len(lines) or not lines[index + 1].strip().lower().startswith("text "):
+                errors.append("Venn union must be followed by an indented text line.")
+            else:
+                leading = len(lines[index + 1]) - len(lines[index + 1].lstrip(" "))
+                if leading <= len(lines[index]) - len(lines[index].lstrip(" ")):
+                    errors.append("Venn union text line must be indented under the union.")
+                index += 2
+                continue
+        elif lowered.startswith("text "):
+            errors.append("Venn text line must appear directly under a union.")
+        index += 1
     if len(set_ids) < 2:
         errors.append("Venn diagram should define at least two sets.")
     if union_count < 1:
