@@ -108,3 +108,35 @@ The app is fixed only when:
 - Invalid raw model output is not displayed as the main code.
 - Main code textbox contains final valid Mermaid code.
 - Fallback status is visible to the user.
+
+## Manual Retest Finding: Valid Code But No SVG Render
+
+Additional manual Colab/Gradio screenshots from 2026-07-22 showed an improved but still incomplete state:
+
+- The active adapter was loaded from `outputs/adapters/lora-20260722-040755`.
+- The dataset still validated correctly: 150 total, 150 valid, 0 invalid, 0 warnings, 0 duplicates.
+- LoRA training completed with an adapter ZIP generated at `/content/MermaidGenerate/outputs/adapters/lora-20260722-040755.zip`.
+- The generator produced final fallback Mermaid code that passed syntax validation.
+- The UI displayed the final Mermaid code and the renderer-facing preview code.
+- The actual rendered Mind Map or Venn SVG was not visible in the preview panel.
+
+This means the generation repair pipeline is working, but the browser rendering path is still unreliable.
+
+## Second Root Cause: Gradio HTML Script Execution
+
+The previous preview renderer inserted a dynamic `<script type="module">` directly into the `gr.HTML` component returned after generation. In Gradio, HTML updates can sanitize, skip, or fail to execute newly inserted script tags depending on the frontend runtime and browser behavior. When that happens, the preview panel shows static HTML such as the code details block, but Mermaid.js never runs and no SVG is injected.
+
+This is a rendering integration issue, not a dataset, LoRA, or validator issue.
+
+## Updated Preview Strategy
+
+The renderer should isolate Mermaid execution inside an `<iframe srcdoc="...">` preview:
+
+- each generation returns a fresh iframe document;
+- the iframe document imports the pinned Mermaid.js module;
+- the iframe renders the validated renderer-facing Mermaid code into an SVG;
+- Gradio only receives inert iframe markup in the parent component;
+- the fallback code remains visible outside the iframe for copying/debugging;
+- render failures are shown inside the iframe with the exact error message.
+
+This is safer for Gradio because browser script execution happens during iframe document load instead of depending on dynamic execution of script tags in the parent `gr.HTML` update.
