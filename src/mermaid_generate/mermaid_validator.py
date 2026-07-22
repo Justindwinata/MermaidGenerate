@@ -8,6 +8,25 @@ from typing import Literal
 
 DiagramType = Literal["mindmap", "venn", "auto"]
 
+STOP_MARKERS = (
+    "diagram type:",
+    "user request:",
+    "result expectations:",
+    "output format:",
+    "required format:",
+    "rules:",
+    "outline:",
+    "</mermaid>",
+    "classdiagram",
+    "class diagram",
+    "flowchart",
+    "sequencediagram",
+    "sequence diagram",
+    "uml",
+    "@startuml",
+    "@enduml",
+)
+
 
 @dataclass
 class MermaidValidationResult:
@@ -49,6 +68,79 @@ def remove_explanation_text(text: str) -> str:
     if start_index is None:
         return "\n".join(lines).strip()
     return "\n".join(lines[start_index:]).strip()
+
+
+def normalize_line_endings(text: str) -> str:
+    return text.replace("\r\n", "\n").replace("\r", "\n").strip()
+
+
+def _line_starts_diagram(line: str) -> str | None:
+    stripped = line.strip().lower()
+    if stripped == "mindmap":
+        return "mindmap"
+    if stripped in {"venn", "venn-beta"}:
+        return "venn"
+    return None
+
+
+def _is_stop_line(line: str, expected_type: str, started: bool) -> bool:
+    stripped = line.strip()
+    lowered = stripped.lower()
+    if not stripped:
+        return False
+    line_type = _line_starts_diagram(stripped)
+    if started and line_type and line_type != expected_type:
+        return True
+    if started and line_type == expected_type:
+        return True
+    if any(marker in lowered for marker in STOP_MARKERS):
+        return True
+    if lowered.startswith(("here is", "explanation", "note:", "notes:", "the diagram")):
+        return True
+    if lowered.startswith(("```", "~~~")):
+        return True
+    return False
+
+
+def extract_first_mermaid_diagram(text: str, expected_type: str = "auto") -> str:
+    """Extract the first Mermaid Mind Map or Venn block from noisy LLM output."""
+
+    expected = expected_type.lower().replace("mind map", "mindmap")
+    if expected not in {"mindmap", "venn"}:
+        expected = "auto"
+
+    cleaned = normalize_line_endings(strip_markdown_fences(text or ""))
+    if not cleaned:
+        return ""
+
+    lines = cleaned.splitlines()
+    start_index = None
+    detected_type = None
+
+    for index, line in enumerate(lines):
+        line_type = _line_starts_diagram(line)
+        if line_type and (expected == "auto" or line_type == expected):
+            start_index = index
+            detected_type = line_type
+            break
+
+    if start_index is None:
+        if expected in {"mindmap", "venn"}:
+            repaired, _ = safe_repair_missing_prefix(cleaned, expected)
+            if repaired != cleaned:
+                return extract_first_mermaid_diagram(repaired, expected)
+        return cleaned.strip()
+
+    kept: list[str] = []
+    for line in lines[start_index:]:
+        if kept and _is_stop_line(line, detected_type or expected, started=True):
+            break
+        kept.append(line.rstrip())
+
+    while kept and not kept[-1].strip():
+        kept.pop()
+
+    return normalize_for_assignment("\n".join(kept))
 
 
 def infer_diagram_type(code: str) -> str | None:
@@ -98,7 +190,7 @@ def safe_repair_missing_prefix(code: str, expected_type: str) -> tuple[str, str 
 
 
 def postprocess_mermaid_output(raw_output: str, expected_type: str = "auto") -> str:
-    cleaned = remove_explanation_text(raw_output)
+    cleaned = extract_first_mermaid_diagram(raw_output, expected_type)
     expected = expected_type.lower().replace("mind map", "mindmap")
     if expected in {"mindmap", "venn"}:
         cleaned, _ = safe_repair_missing_prefix(cleaned, expected)

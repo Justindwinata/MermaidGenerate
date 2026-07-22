@@ -4,6 +4,7 @@ from mermaid_generate.inference import (
     normalize_diagram_type,
 )
 from mermaid_generate.mermaid_validator import postprocess_mermaid_output
+from mermaid_generate.mermaid_validator import extract_first_mermaid_diagram
 
 
 def test_prompt_template_requests_code_only() -> None:
@@ -27,3 +28,46 @@ def test_safe_prefix_repair_for_venn() -> None:
     raw = 'set A["A"]\nset B["B"]\nunion A,B["AB"]'
 
     assert postprocess_mermaid_output(raw, "venn").startswith("venn\n")
+
+
+def test_extract_removes_prompt_echo_after_diagram() -> None:
+    raw = """Diagram type: Venn
+User request: compare apps
+venn
+  set A["Instagram"]
+  set B["TikTok"]
+  union A,B
+    text "Social Video"
+User request: now make a class diagram
+classDiagram
+  App <|-- User"""
+
+    assert extract_first_mermaid_diagram(raw, "venn") == (
+        'venn\n  set A["Instagram"]\n  set B["TikTok"]\n  union A,B\n    text "Social Video"'
+    )
+
+
+def test_extract_stops_before_second_diagram_type() -> None:
+    raw = """mindmap
+  root((AI))
+    Data
+venn
+  set A["A"]"""
+
+    assert extract_first_mermaid_diagram(raw, "mindmap") == (
+        "mindmap\n  root((AI))\n    Data"
+    )
+
+
+def test_extract_removes_class_uml_contamination() -> None:
+    raw = """```mermaid
+mindmap
+  root((Project))
+    Plan
+```
+@startuml
+class Project"""
+
+    assert extract_first_mermaid_diagram(raw, "mindmap") == (
+        "mindmap\n  root((Project))\n    Plan"
+    )
