@@ -16,6 +16,17 @@ Start the app:
 python app.py --local
 ```
 
+Expected console output includes:
+
+```text
+MermaidGenerate starting...
+Mode: local
+Host: 127.0.0.1
+Port: 7860
+Local URL: http://127.0.0.1:7860
+Gradio share/public link: disabled
+```
+
 Default local URL:
 
 ```text

@@ -8,6 +8,15 @@
 - [x] Requirements exist: `requirements.txt`
 - [x] README exists: `README.md`
 - [x] Documentation exists: `docs/`
+- [x] Local run guide exists: `docs/LOCAL_RUN_GUIDE.md`
+- [x] Local UI revision plan exists: `docs/LOCAL_UI_REVISION_PLAN.md`
+
+## Launch Modes
+
+- [x] Local-first command documented: `python app.py --local`.
+- [x] Default local URL documented: `http://127.0.0.1:7860`.
+- [x] Colab/share mode documented: `python app.py --colab` or notebook `share=True`.
+- [x] Gradio Live is optional for local laptop usage.
 
 ## Dataset Files
 
@@ -50,6 +59,9 @@ Current status: not completed locally because CUDA is unavailable.
 
 - Colab GPU training evidence still requires user-side execution.
 - Screenshots of actual generation/training success require a real model/training run.
+- Local mode requires dependencies installed on the local machine.
+- Local model loading may require enough RAM or VRAM.
+- Colab still benefits from a Gradio public share link for browser access.
 - Model quality depends on dataset size and training.
 - Full Fine-Tuning may fail on limited GPU.
 - QLoRA requires compatible CUDA/bitsandbytes.

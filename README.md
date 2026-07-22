@@ -1,6 +1,6 @@
 # MermaidGenerate
 
-MermaidGenerate is a Google Colab-first local AI project for generating Mermaid **Mind Map** and **Venn Diagram** code with a Hugging Face **Transformers + PyTorch** language model.
+MermaidGenerate is a local-first and Google Colab-compatible AI project for generating Mermaid **Mind Map** and **Venn Diagram** code with a Hugging Face **Transformers + PyTorch** language model.
 
 Primary deliverable:
 
@@ -47,17 +47,31 @@ No paid API is used.
 2. Select **Runtime > Change runtime type > GPU** for model loading and training.
 3. Run cells from top to bottom.
 4. Use the GPU check cell to confirm CUDA availability.
-5. Launch the Gradio app cell.
-6. Open the generated Gradio link.
+5. Launch the Gradio app cell with `share=True`.
+6. Open the generated Gradio public link.
+
+Colab usually needs a Gradio public link because Colab localhost is not directly accessible from your laptop browser.
 
 ## Run Locally
 
 ```bash
 pip install -r requirements.txt
-python app.py
+python app.py --local
 ```
 
-Then open the local Gradio URL printed by the app.
+Then open:
+
+```text
+http://127.0.0.1:7860
+```
+
+Local laptop mode does not require Gradio Live. Optional modes:
+
+```bash
+python app.py --local --port 7861
+python app.py --share
+python app.py --colab
+```
 
 ## Dataset Files
 
@@ -190,6 +204,8 @@ Latest render fix evidence:
 - `docs/EVALUATION_BASELINE_REPORT.md`
 - `docs/LORA_SMOKE_TEST_PLAN.md`
 - `docs/LORA_SMOKE_TEST_RESULT.md`
+- `docs/LOCAL_RUN_GUIDE.md`
+- `docs/LOCAL_UI_REVISION_PLAN.md`
 - `docs/SCREENSHOT_CAPTURE_PLAN.md`
 - `docs/SUBMISSION_GUIDE.md`
 - `docs/FINAL_DEMO_SCRIPT.md`

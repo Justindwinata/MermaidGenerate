@@ -8,6 +8,14 @@ Open `MermaidGenerate_Mindmap_Venn_Finetuning_WebUI.ipynb`.
 
 Say: "This is the primary deliverable. The project is notebook-first and runs the local Transformers/PyTorch Mermaid generator."
 
+For a local laptop demo, open a terminal in the repository and run:
+
+```bash
+python app.py --local
+```
+
+Then open `http://127.0.0.1:7860`. Local mode does not require Gradio Live.
+
 ## 2. Select GPU Runtime
 
 Go to **Runtime > Change runtime type > GPU**.
@@ -34,7 +42,7 @@ Show:
 
 Run the Gradio app cell and open the public/local URL.
 
-Say: "The app has two main tabs: Generator Mermaid and Dataset & Fine-Tuning."
+Say: "In Colab this uses a public Gradio share link. On a local laptop the same app runs at `http://127.0.0.1:7860` without Gradio Live. The app has two main tabs: Generator Mermaid and Dataset & Fine-Tuning."
 
 ## 6. Open Generator Mermaid Tab
 
