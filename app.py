@@ -79,7 +79,7 @@ def generate_from_ui(
     temperature: float,
     top_p: float,
     repetition_penalty: float,
-) -> tuple[str, str, str, str, str]:
+) -> tuple[str, str, str, str, str, str]:
     if not prompt or not prompt.strip():
         code = ""
         preview = build_mermaid_preview_html("")
@@ -89,6 +89,7 @@ def generate_from_ui(
             preview,
             "Prompt cannot be empty.",
             "0.00 s",
+            "",
         )
 
     try:
@@ -107,8 +108,9 @@ def generate_from_ui(
             result.model_status,
             result.code,
             preview,
-            result.validation_message,
+            f"{result.validation_message}\nFallback used: {result.repair_used}",
             f"{result.inference_time_seconds:.2f} s",
+            result.raw_output,
         )
     except Exception as exc:
         code = ""
@@ -118,11 +120,12 @@ def generate_from_ui(
             build_mermaid_preview_html(code),
             f"Inference failed: {exc}",
             "0.00 s",
+            "",
         )
 
 
-def clear_generator() -> tuple[str, str, str, str]:
-    return "", build_mermaid_preview_html(""), "Waiting for generation.", "0.00 s"
+def clear_generator() -> tuple[str, str, str, str, str]:
+    return "", build_mermaid_preview_html(""), "Waiting for generation.", "0.00 s", ""
 
 
 def validate_upload(file_obj: Any) -> tuple[list[list[Any]], str, str, str, str]:
@@ -318,15 +321,17 @@ def build_app() -> Any:
                             inputs=[diagram_type, prompt],
                         )
                     with gr.Column(scale=1):
-                        max_new_tokens = gr.Slider(64, 1024, value=320, step=16, label="max_new_tokens")
-                        temperature = gr.Slider(0.0, 1.5, value=0.2, step=0.05, label="temperature")
-                        top_p = gr.Slider(0.1, 1.0, value=0.9, step=0.05, label="top_p")
-                        repetition_penalty = gr.Slider(1.0, 1.5, value=1.05, step=0.01, label="repetition_penalty")
+                        max_new_tokens = gr.Slider(64, 512, value=320, step=16, label="max_new_tokens")
+                        temperature = gr.Slider(0.0, 1.0, value=0.1, step=0.05, label="temperature")
+                        top_p = gr.Slider(0.1, 1.0, value=0.85, step=0.05, label="top_p")
+                        repetition_penalty = gr.Slider(1.0, 1.5, value=1.1, step=0.01, label="repetition_penalty")
                         inference_time = gr.Textbox(label="Inference time", value="0.00 s", interactive=False)
                         validation_result = gr.Textbox(label="Mermaid syntax validation", lines=4, interactive=False)
                 with gr.Row():
-                    code_output = gr.Code(label="Copyable Mermaid code", language="markdown", lines=16)
+                    code_output = gr.Code(label="Final valid Mermaid code", language="markdown", lines=16)
                     preview_output = gr.HTML(label="Rendered Mermaid preview", value=build_mermaid_preview_html(""))
+                with gr.Accordion("Advanced debug: raw model output", open=False):
+                    raw_output = gr.Textbox(label="Raw model output before extraction/repair", lines=8, interactive=False)
 
                 generate_button.click(
                     generate_from_ui,
@@ -344,6 +349,7 @@ def build_app() -> Any:
                         preview_output,
                         validation_result,
                         inference_time,
+                        raw_output,
                     ],
                 )
                 clear_button.click(
@@ -353,6 +359,7 @@ def build_app() -> Any:
                         preview_output,
                         validation_result,
                         inference_time,
+                        raw_output,
                     ],
                 )
 

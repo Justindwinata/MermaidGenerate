@@ -10,9 +10,9 @@ from mermaid_generate.mermaid_validator import extract_first_mermaid_diagram
 def test_prompt_template_requests_code_only() -> None:
     prompt = build_generation_prompt("Create a Venn about A and B", "venn")
 
-    assert "Return only valid Mermaid code" in prompt
-    assert "Diagram type: Venn Diagram" in prompt
-    assert "output should start with venn" in prompt
+    assert "Return exactly one valid Mermaid Venn diagram" in prompt
+    assert "Use assignment-facing first line: venn" in prompt
+    assert "Do not use undefined union references" in prompt
 
 
 def test_auto_detect_prefers_venn_for_compare() -> None:

@@ -6,7 +6,8 @@ import time
 from dataclasses import dataclass
 from typing import Any
 
-from .mermaid_validator import postprocess_mermaid_output, validate_mermaid_code
+from .diagram_repair import repair_or_compile_mindmap, repair_or_compile_venn
+from .mermaid_validator import validate_mermaid_code
 from .model_loader import ACTIVE_MODEL_STATE, ActiveModelState, load_base_model
 
 
@@ -19,9 +20,9 @@ Do not explain the answer."""
 @dataclass
 class GenerationSettings:
     max_new_tokens: int = 320
-    temperature: float = 0.2
-    top_p: float = 0.9
-    repetition_penalty: float = 1.05
+    temperature: float = 0.1
+    top_p: float = 0.85
+    repetition_penalty: float = 1.1
 
 
 @dataclass
@@ -32,6 +33,8 @@ class InferenceResult:
     validation_message: str
     inference_time_seconds: float
     model_status: str
+    repair_used: bool = False
+    repair_message: str = ""
 
 
 def normalize_diagram_type(diagram_type: str) -> str:
@@ -56,23 +59,56 @@ def build_generation_prompt(user_prompt: str, diagram_type: str) -> str:
     normalized_type = normalize_diagram_type(diagram_type)
     if normalized_type == "auto":
         normalized_type = detect_diagram_type_from_prompt(user_prompt)
-    label = "Mind Map" if normalized_type == "mindmap" else "Venn Diagram"
-    type_rules = (
-        "- output should start with mindmap\n"
-        "- use valid Mermaid mindmap indentation\n"
-        "- represent hierarchical concepts clearly"
-        if normalized_type == "mindmap"
-        else "- output should start with venn\n"
-        "- use set and union statements\n"
-        "- represent sets and intersections clearly"
-    )
-    return (
-        f"{SYSTEM_PROMPT}\n\n"
-        f"Diagram type: {label}\n"
-        f"User request: {user_prompt.strip()}\n\n"
-        f"Rules:\n{type_rules}\n\n"
-        "Mermaid code:"
-    )
+    if normalized_type == "mindmap":
+        return f"""You are a strict Mermaid Mind Map generator.
+
+Return exactly one valid Mermaid mindmap.
+Do not return explanations.
+Do not return markdown fences.
+Do not return any other diagram type.
+Do not mention class diagrams, UML, flowcharts, markdown, or code fragments.
+Stop after the Mermaid diagram.
+
+Required format:
+mindmap
+  root((Main Topic))
+    Branch 1
+      Subtopic 1
+      Subtopic 2
+    Branch 2
+      Subtopic 3
+
+User request:
+{user_prompt.strip()}"""
+
+    return f"""You are a strict Mermaid Venn diagram generator.
+
+Return exactly one valid Mermaid Venn diagram.
+Use assignment-facing first line: venn
+The renderer will internally convert it to venn-beta.
+Do not return explanations.
+Do not return markdown fences.
+Do not return class diagrams, UML, flowcharts, markdown, or code fragments.
+Do not use undefined union references.
+Do not add text after the diagram.
+Stop after the Mermaid diagram.
+
+Required format:
+venn
+  set A["First Set"]
+  set B["Second Set"]
+  set C["Third Set"]
+  union A,B
+    text "Overlap of First and Second"
+  union A,C
+    text "Overlap of First and Third"
+  union B,C
+    text "Overlap of Second and Third"
+  union A,B,C
+    text "Overlap of All Sets"
+
+User request:
+{user_prompt.strip()}"""
 
 
 def apply_chat_template(tokenizer: Any, prompt: str) -> str:
@@ -115,6 +151,13 @@ def generate_mermaid(
     normalized_type = normalize_diagram_type(diagram_type)
     if normalized_type == "auto":
         normalized_type = detect_diagram_type_from_prompt(user_prompt)
+    if normalized_type == "venn" and settings.max_new_tokens > 256:
+        settings = GenerationSettings(
+            max_new_tokens=256,
+            temperature=settings.temperature,
+            top_p=settings.top_p,
+            repetition_penalty=settings.repetition_penalty,
+        )
 
     active_state = ensure_model_loaded(state)
     model = active_state.model
@@ -148,15 +191,21 @@ def generate_mermaid(
 
     new_tokens = output_ids[0][inputs["input_ids"].shape[-1] :]
     raw_output = tokenizer.decode(new_tokens, skip_special_tokens=True).strip()
-    code = postprocess_mermaid_output(raw_output, expected_type=normalized_type)
-    validation = validate_mermaid_code(code, expected_type=normalized_type)
+    repair = (
+        repair_or_compile_venn(raw_output, user_prompt)
+        if normalized_type == "venn"
+        else repair_or_compile_mindmap(raw_output, user_prompt)
+    )
+    validation = validate_mermaid_code(repair.code, expected_type=normalized_type)
     elapsed = time.perf_counter() - started
 
     return InferenceResult(
-        code=validation.normalized_code or code,
+        code=validation.normalized_code or repair.code,
         raw_output=raw_output,
         valid=validation.valid,
-        validation_message=validation.message(),
+        validation_message=f"{validation.message()}\nRepair status: {repair.message}",
         inference_time_seconds=elapsed,
         model_status=active_state.status_text(),
+        repair_used=repair.used_fallback,
+        repair_message=repair.message,
     )
