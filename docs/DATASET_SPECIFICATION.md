@@ -11,7 +11,7 @@
 ### Prompt Completion
 
 ```json
-{"prompt":"Create a Venn diagram.","completion":"venn\n  set A[\"A\"]\n  set B[\"B\"]\n  union A,B[\"AB\"]"}
+{"prompt":"Create a Venn diagram.","completion":"venn\n  set A[\"A\"]\n  set B[\"B\"]\n  union A,B\n    text \"AB\""}
 ```
 
 ### Instruction Output
@@ -40,3 +40,24 @@ Every valid sample is normalized to:
 ## Validation Checks
 
 The validator checks file format, required fields, empty prompt/target, target prefix, markdown fences, type mismatch, target length, duplicates, distributions, invalid rows, and train readiness.
+
+## Venn Syntax Alignment
+
+Assignment-facing Venn targets start with `venn`, but must use renderer-safe union text blocks:
+
+```mermaid
+venn
+  set A["Instagram"]
+  set B["TikTok"]
+  set C["WhatsApp"]
+  union A,B
+    text "Audience Engagement"
+  union A,C
+    text "Customer Communication"
+  union B,C
+    text "Short Content Sharing"
+  union A,B,C
+    text "Digital Marketing"
+```
+
+The preview renderer converts the first line to `venn-beta` internally.

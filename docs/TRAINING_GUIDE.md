@@ -18,3 +18,7 @@ Full fine-tuning trains all model weights and can fail on limited GPU memory. Th
 - Full Fine-Tuning: `outputs/full_models/<timestamp>/`
 
 LoRA/QLoRA adapters are zipped for download.
+
+## Generation Reliability Note
+
+LoRA smoke training can complete successfully while the model still produces imperfect Mermaid syntax. The runtime therefore uses extraction, validation, and deterministic repair/compile fallback before rendering. This guard keeps the UI demo reliable without claiming the model itself is perfect.
