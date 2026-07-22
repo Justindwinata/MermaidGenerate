@@ -182,3 +182,117 @@ def repair_or_compile_venn(raw_output: str, user_prompt: str) -> RepairResult:
         True,
         "Compiled deterministic Venn fallback from prompt because model output was invalid.",
     )
+
+
+def extract_mindmap_topic(user_prompt: str) -> str:
+    prompt = re.sub(
+        r"(?i)\b(buat|create|make|mind\s*map|mindmap|tentang|about|untuk|for|diagram|peta pikiran)\b",
+        " ",
+        user_prompt,
+    )
+    prompt = re.sub(r"\s+", " ", prompt).strip(" .,:;-")
+    prompt = re.sub(r"(?i)\b(mahasiswa|students?|pemula|beginners?)\b", " ", prompt)
+    prompt = re.sub(r"\s+", " ", prompt).strip(" .,:;-")
+    if not prompt:
+        return "Main Topic"
+    topic = prompt.title()
+    topic = re.sub(r"\bAi\b", "AI", topic)
+    return sanitize_label(topic, "Main Topic")
+
+
+def _is_indonesian_prompt(prompt: str) -> bool:
+    lowered = f" {prompt.lower()} "
+    return any(marker in lowered for marker in (" buat ", " tentang ", " mahasiswa", " belajar ", " strategi ", " untuk "))
+
+
+def _mindmap_branches(topic: str, prompt: str) -> list[tuple[str, list[str]]]:
+    lowered = prompt.lower()
+    if "ai" in lowered or "machine learning" in lowered:
+        if _is_indonesian_prompt(prompt):
+            return [
+                ("Dasar AI", ["Machine Learning", "Deep Learning", "Data"]),
+                ("Praktik", ["Proyek Kecil", "Eksperimen Model", "Evaluasi"]),
+                ("Tools", ["Python", "Notebook", "Library AI"]),
+                ("Portofolio", ["Dokumentasi", "GitHub", "Presentasi"]),
+            ]
+        return [
+            ("AI Basics", ["Machine Learning", "Deep Learning", "Data"]),
+            ("Practice", ["Small Projects", "Model Experiments", "Evaluation"]),
+            ("Tools", ["Python", "Notebook", "AI Libraries"]),
+            ("Portfolio", ["Documentation", "GitHub", "Presentation"]),
+        ]
+    if any(marker in lowered for marker in ("marketing", "umkm", "business", "bisnis")):
+        return [
+            ("Content Strategy", ["Short Video", "Educational Post", "Testimonial"]),
+            ("Channels", ["Instagram", "TikTok", "WhatsApp"]),
+            ("Customers", ["Persona", "Needs", "Feedback"]),
+            ("Metrics", ["Reach", "Engagement", "Conversion"]),
+        ]
+    if _is_indonesian_prompt(prompt):
+        return [
+            ("Konsep Utama", ["Definisi", "Tujuan", "Manfaat"]),
+            ("Aktivitas", ["Perencanaan", "Praktik", "Evaluasi"]),
+            ("Sumber Daya", ["Tools", "Referensi", "Komunitas"]),
+            ("Hasil", ["Dokumentasi", "Presentasi", "Perbaikan"]),
+        ]
+    return [
+        ("Core Ideas", ["Definition", "Goals", "Benefits"]),
+        ("Activities", ["Planning", "Practice", "Evaluation"]),
+        ("Resources", ["Tools", "References", "Community"]),
+        ("Outcomes", ["Documentation", "Presentation", "Iteration"]),
+    ]
+
+
+def compile_safe_mindmap(user_prompt: str) -> str:
+    topic = extract_mindmap_topic(user_prompt)
+    lines = ["mindmap", f"  root(({topic}))"]
+    for branch, children in _mindmap_branches(topic, user_prompt):
+        lines.append(f"    {sanitize_label(branch)}")
+        for child in children:
+            lines.append(f"      {sanitize_label(child)}")
+    return "\n".join(lines)
+
+
+def repair_mindmap_candidate(candidate: str) -> str:
+    lines = [line.rstrip() for line in candidate.splitlines() if line.strip()]
+    if not lines:
+        return ""
+    if lines[0].strip().lower() != "mindmap":
+        candidate = f"mindmap\n{candidate}"
+        lines = [line.rstrip() for line in candidate.splitlines() if line.strip()]
+    root_seen = False
+    repaired = ["mindmap"]
+    for line in lines[1:]:
+        stripped = sanitize_label(line.strip())
+        if not stripped:
+            continue
+        if "classdiagram" in stripped.lower() or "flowchart" in stripped.lower() or "uml" in stripped.lower():
+            break
+        leading = len(line) - len(line.lstrip(" "))
+        if "root" in stripped.lower() and not root_seen:
+            repaired.append(f"  {line.strip()}")
+            root_seen = True
+            continue
+        if "root" in stripped.lower() and root_seen:
+            continue
+        indent = max(4, leading if leading % 2 == 0 else leading + 1)
+        repaired.append(f"{' ' * indent}{stripped}")
+    return "\n".join(repaired)
+
+
+def repair_or_compile_mindmap(raw_output: str, user_prompt: str) -> RepairResult:
+    candidate = extract_first_mermaid_diagram(raw_output, "mindmap")
+    repaired = repair_mindmap_candidate(candidate)
+    validation = validate_mermaid_code(repaired, "mindmap")
+    if validation.valid:
+        return RepairResult(validation.normalized_code, False, "Cleaned valid Mind Map output.")
+
+    fallback = compile_safe_mindmap(user_prompt)
+    fallback_validation = validate_mermaid_code(fallback, "mindmap")
+    if not fallback_validation.valid:
+        raise RuntimeError(f"Internal Mind Map fallback failed validation: {fallback_validation.message()}")
+    return RepairResult(
+        fallback_validation.normalized_code,
+        True,
+        "Compiled deterministic Mind Map fallback from prompt because model output was invalid.",
+    )
