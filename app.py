@@ -29,7 +29,7 @@ from mermaid_generate.training_manager import TRAINING_MANAGER
 APP_TITLE = "MermaidGenerate - Local AI Mermaid Diagram Generator"
 APP_SUBTITLE = (
     "Generate Mind Map and Venn Diagram Mermaid code using a locally "
-    "fine-tuned Transformers/PyTorch model."
+    "fine-tuned Transformers/PyTorch model with validated Mermaid preview rendering."
 )
 
 APP_CSS = """
@@ -305,7 +305,7 @@ def readable_model_status() -> str:
     metadata = current_adapter_metadata()
     suffix = (
         "\nRuntime: Transformers + PyTorch. "
-        "Venn preview renders assignment-facing 'venn' code through Mermaid 'venn-beta'."
+        "Copyable Venn output starts with 'venn'; the preview renderer safely converts it to Mermaid 'venn-beta'."
     )
     return metadata.status + suffix
 
@@ -334,7 +334,7 @@ def generate_from_ui(
             readable_model_status(),
             code,
             preview,
-            "Prompt cannot be empty.",
+            "Prompt cannot be empty. Enter a topic or comparison request, then click Generate.",
             "0.00 s",
             "",
         )
@@ -355,7 +355,11 @@ def generate_from_ui(
             result.model_status,
             result.code,
             preview,
-            f"{result.validation_message}\nFallback used: {result.repair_used}",
+            (
+                f"{result.validation_message}\n"
+                f"Fallback repair used: {result.repair_used}\n"
+                "The main code box contains the final validated Mermaid code used for preview."
+            ),
             f"{result.inference_time_seconds:.2f} s",
             result.raw_output,
         )
@@ -365,7 +369,7 @@ def generate_from_ui(
             readable_model_status(),
             code,
             build_mermaid_preview_html(code),
-            f"Inference failed: {exc}",
+            f"Inference failed: {exc}\nNo invalid raw output was sent to the renderer.",
             "0.00 s",
             "",
         )
@@ -581,7 +585,8 @@ def build_app() -> Any:
   <p>{APP_SUBTITLE}</p>
   <p>Primary runtime: <strong>Transformers + PyTorch + PEFT</strong>. No paid API is used.
   Venn diagrams are generated as <code>venn</code> and rendered internally through Mermaid
-  <code>venn-beta</code>.</p>
+  <code>venn-beta</code>. Local laptop mode uses <code>127.0.0.1:7860</code>; Colab uses the
+  public <code>gradio.live</code> link.</p>
 </div>
 """,
             elem_classes=["mg-hero-wrap"],
@@ -605,7 +610,7 @@ def build_app() -> Any:
                         prompt = gr.Textbox(
                             label="Prompt",
                             lines=8,
-                            placeholder="Create a mind map about online learning...",
+                            placeholder="Example: Buat mind map tentang strategi belajar AI untuk mahasiswa informatika.",
                         )
                         with gr.Row():
                             generate_button = gr.Button("Generate", variant="primary")
@@ -627,12 +632,20 @@ def build_app() -> Any:
                         top_p = gr.Slider(0.1, 1.0, value=0.85, step=0.05, label="top_p")
                         repetition_penalty = gr.Slider(1.0, 1.5, value=1.1, step=0.01, label="repetition_penalty")
                         inference_time = gr.Textbox(label="Inference time", value="0.00 s", interactive=False)
-                        validation_result = gr.Textbox(label="Mermaid syntax validation", lines=4, interactive=False)
+                        validation_result = gr.Textbox(
+                            label="Mermaid validation and repair status",
+                            lines=5,
+                            interactive=False,
+                        )
                 with gr.Row():
                     code_output = gr.Code(label="Final valid Mermaid code", language="markdown", lines=16)
                     preview_output = gr.HTML(label="Rendered Mermaid preview", value=build_mermaid_preview_html(""))
-                with gr.Accordion("Advanced debug: raw model output", open=False):
-                    raw_output = gr.Textbox(label="Raw model output before extraction/repair", lines=8, interactive=False)
+                with gr.Accordion("Advanced debug: raw model output before validation/repair", open=False):
+                    raw_output = gr.Textbox(
+                        label="Raw model output. This is not sent directly to the preview renderer.",
+                        lines=8,
+                        interactive=False,
+                    )
 
                 generate_button.click(
                     generate_from_ui,
@@ -667,7 +680,8 @@ def build_app() -> Any:
             with gr.Tab("Dataset & Fine-Tuning"):
                 gr.Markdown(
                     "Upload JSON/JSONL with messages, prompt-completion, or instruction-output samples. "
-                    "For the MG-0002 smoke demo, use `datasets/curated/mixed_mindmap_venn_curated.jsonl`."
+                    "For the final demo, use `datasets/curated/mixed_mindmap_venn_curated.jsonl`. "
+                    "Training is allowed only after validation finds at least one valid sample."
                 )
                 dataset_file = gr.File(
                     label="Dataset upload",
@@ -716,7 +730,8 @@ def build_app() -> Any:
                 gr.Markdown(
                     "Recommended LoRA smoke values: 1 epoch, batch size 1, gradient accumulation 4, "
                     "max sequence length 512, learning rate 2e-4, validation split 0.1. "
-                    "Training is real; progress appears after clicking Refresh Status."
+                    "Training is real; click Refresh Status to read real progress, loss logs, result summary, "
+                    "adapter activation status, and adapter ZIP path."
                 )
                 with gr.Row():
                     mode = gr.Dropdown(
@@ -747,7 +762,7 @@ def build_app() -> Any:
                     value=readable_model_status,
                     interactive=False,
                 )
-                adapter_download = gr.File(label="Download ZIP for LoRA/QLoRA adapter")
+                adapter_download = gr.File(label="Download ZIP for LoRA/QLoRA adapter after successful training")
 
                 start_button.click(
                     start_training_from_ui,
@@ -793,10 +808,12 @@ def build_app() -> Any:
                 )
 
         gr.Markdown(
-            "Limitations: model quality depends on dataset size and training; example datasets are small; "
+            "Limitations: model quality depends on dataset size and training; fallback repair may be used "
+            "to guarantee valid Mermaid syntax; example datasets are small; "
             "full fine-tuning may require high GPU memory; QLoRA requires CUDA/bitsandbytes; "
-            "Venn preview uses Mermaid v11 venn-beta renderer support; llama.cpp/GGUF is future optional compatibility; "
-            "no paid API is used."
+            "Venn preview uses Mermaid v11 venn-beta renderer support; local laptop mode uses 127.0.0.1; "
+            "Colab uses a gradio.live share link; llama.cpp/GGUF is future optional compatibility; no paid API is used.",
+            elem_classes=["mg-footer-note"],
         )
     return demo
 
