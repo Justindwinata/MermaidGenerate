@@ -1,0 +1,56 @@
+{
+  "mode": "validator-only",
+  "model_inference_executed": false,
+  "reference_dataset": {
+    "file": "datasets/expanded/mixed_mindmap_venn_expanded_1000.jsonl",
+    "total": 1000,
+    "diagram_type_counts": {
+      "mindmap": 500,
+      "venn": 500
+    },
+    "invalid_samples": 0,
+    "warning_samples": 0,
+    "mermaid_invalid_count": 0,
+    "duplicate_prompt_count": 0,
+    "duplicate_completion_count": 0,
+    "venn_undefined_union_count": 0,
+    "mindmap_missing_root_count": 0,
+    "pass": true
+  },
+  "evaluation_prompts": {
+    "file": "datasets/evaluation/final_eval_prompts_100.jsonl",
+    "total_prompts": 100,
+    "diagram_type_counts": {
+      "mindmap": 50,
+      "venn": 50
+    },
+    "language_counts": {
+      "en": 50,
+      "id": 50
+    },
+    "domain_counts": {
+      "academic": 10,
+      "ai": 4,
+      "business": 9,
+      "cloud": 4,
+      "data": 8,
+      "devops": 3,
+      "education": 13,
+      "frontend": 3,
+      "general": 5,
+      "health": 3,
+      "marketing": 3,
+      "presentation": 3,
+      "programming": 4,
+      "security": 5,
+      "skills": 3,
+      "social": 4,
+      "software": 6,
+      "technology": 10
+    },
+    "duplicate_prompt_count": 0,
+    "empty_prompt_count": 0
+  },
+  "pass": true,
+  "note": "Validator-only mode checks syntax safety and evaluation prompt coverage. It does not measure model quality."
+}
