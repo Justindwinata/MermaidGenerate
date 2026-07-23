@@ -17,6 +17,7 @@ Summary date: 2026-07-23 Asia/Jakarta
 - Render-fix screenshots exist under `docs/evidence/screenshots/fix/`.
 - A follow-up local browser smoke test confirmed that the iframe-based preview renders visible Mind Map and Venn SVG diagrams.
 - MG-0005 local-first launch smoke test returned `HTTP/1.1 200 OK` from `http://127.0.0.1:7860`.
+- MG-0007 expanded dataset validation passed with 500 Mind Map examples, 500 Venn examples, balanced 500/1000 mixed datasets, and 100 final evaluation prompts.
 
 ## Assignment Evidence Map
 
@@ -26,6 +27,9 @@ Summary date: 2026-07-23 Asia/Jakarta
 | `app.py` exists | Verified | Local-first Gradio app entrypoint. |
 | Example datasets exist | Verified | `datasets/examples/mindmap_examples.jsonl`, `datasets/examples/venn_examples.jsonl`. |
 | Curated mixed dataset exists | Verified | `datasets/curated/mixed_mindmap_venn_curated.jsonl`. |
+| Expanded mixed datasets exist | Verified | `datasets/expanded/mixed_mindmap_venn_expanded_500.jsonl`, `datasets/expanded/mixed_mindmap_venn_expanded_1000.jsonl`. |
+| Expanded dataset quality report exists | Verified | `results/dataset_quality/expanded_dataset_summary.json` and `.md`. |
+| Final validator-only evaluation exists | Verified | `results/evaluation/final_eval_baseline.json`; model inference was not executed in this validator-only report. |
 | Generator tab evidence | Verified locally | Render-fix screenshots and code tests. |
 | Dataset validation evidence | Verified by screenshots/user Colab | 150 valid, 0 invalid/warnings/duplicates reported in manual test. |
 | Training evidence | Verified by user Colab screenshots | LoRA training completed with train/eval loss shown. |
@@ -68,3 +72,5 @@ Summary date: 2026-07-23 Asia/Jakarta
 ## Remaining Truth
 
 LoRA smoke training can complete and still produce imperfect syntax. The repair fallback is the runtime guard that guarantees valid Mermaid syntax for demo rendering. Fresh final Colab screenshots should be captured during the actual submission demo if the lecturer requires current runtime proof.
+
+The expanded dataset improves training coverage but does not prove model improvement by itself. Model-mode evaluation should be run in Colab/GPU only when real inference can be executed and recorded.

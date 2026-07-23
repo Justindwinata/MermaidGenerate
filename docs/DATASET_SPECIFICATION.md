@@ -56,6 +56,36 @@ Expected distribution:
 
 Training should not start if validation reports zero valid samples or unresolved invalid rows.
 
+## Expanded Datasets
+
+MG-0007 adds larger deterministic training datasets:
+
+| File | Rows | Purpose |
+|---|---:|---|
+| `datasets/expanded/mindmap_expanded.jsonl` | 500 | Mind Map-only training coverage. |
+| `datasets/expanded/venn_expanded.jsonl` | 500 | Venn-only training coverage. |
+| `datasets/expanded/mixed_mindmap_venn_expanded_500.jsonl` | 500 | Medium balanced LoRA dataset. |
+| `datasets/expanded/mixed_mindmap_venn_expanded_1000.jsonl` | 1000 | Larger balanced LoRA dataset. |
+| `datasets/evaluation/final_eval_prompts_100.jsonl` | 100 | Prompt-only final evaluation set. |
+
+Validation artifacts:
+
+- `scripts/validate_expanded_dataset.py`
+- `scripts/summarize_dataset_quality.py`
+- `results/dataset_quality/expanded_dataset_summary.json`
+- `results/dataset_quality/expanded_dataset_summary.md`
+
+Final expanded validation status:
+
+- invalid completions: `0`
+- warning rows: `0`
+- duplicate prompts: `0`
+- duplicate completions: `0`
+- Venn undefined union references: `0`
+- Mind Map missing root count: `0`
+- mixed 500 distribution: 250 Mind Map / 250 Venn
+- mixed 1000 distribution: 500 Mind Map / 500 Venn
+
 ## Venn Syntax Alignment
 
 Assignment-facing Venn targets start with `venn`, but must use renderer-safe union text blocks:

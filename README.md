@@ -90,9 +90,22 @@ Curated datasets for MG-0002:
 - `datasets/curated/venn_curated.jsonl`
 - `datasets/curated/mixed_mindmap_venn_curated.jsonl`
 
+Expanded datasets for MG-0007:
+
+- `datasets/expanded/mindmap_expanded.jsonl` with 500 valid Mind Map examples.
+- `datasets/expanded/venn_expanded.jsonl` with 500 valid Venn examples.
+- `datasets/expanded/mixed_mindmap_venn_expanded_500.jsonl` with 250 Mind Map and 250 Venn examples.
+- `datasets/expanded/mixed_mindmap_venn_expanded_1000.jsonl` with 500 Mind Map and 500 Venn examples.
+
 Manual evaluation prompts:
 
 - `datasets/evaluation/manual_eval_prompts.jsonl`
+- `datasets/evaluation/final_eval_prompts_100.jsonl`
+
+Dataset quality reports:
+
+- `results/dataset_quality/expanded_dataset_summary.json`
+- `results/dataset_quality/expanded_dataset_summary.md`
 
 ## Upload and Validate Dataset
 
@@ -114,6 +127,16 @@ Recommended smoke demo:
 - Learning rate: `2e-4`
 - Validation split: `0.1`
 
+Recommended medium demo:
+
+- Dataset: `datasets/expanded/mixed_mindmap_venn_expanded_500.jsonl`
+- Config: `configs/lora_medium_dataset_config.json`
+
+Recommended larger experiment:
+
+- Dataset: `datasets/expanded/mixed_mindmap_venn_expanded_1000.jsonl`
+- Config: `configs/lora_expanded_dataset_config.json`
+
 Use QLoRA only when CUDA and bitsandbytes are compatible. Use Full Fine-Tuning only when GPU memory is sufficient.
 
 ## Download Adapter
@@ -128,6 +151,7 @@ Run validator-only evaluation locally:
 
 ```bash
 python scripts/run_manual_evaluation.py --mode validator-only --write-docs-report
+python scripts/run_final_quality_evaluation.py --validator-only
 ```
 
 Run actual model inference evaluation in Colab/GPU:
@@ -137,6 +161,8 @@ python scripts/run_manual_evaluation.py --mode model --max-samples 20
 ```
 
 Baseline notes are documented in `docs/EVALUATION_BASELINE_REPORT.md`.
+
+Final validator-only baseline is saved to `results/evaluation/final_eval_baseline.json`. It validates dataset syntax and prompt coverage only; it does not claim model quality.
 
 ## Demo Evidence
 
@@ -206,6 +232,9 @@ Latest render fix evidence:
 - `docs/TRAINING_GUIDE.md`
 - `docs/NOTEBOOK_GUIDE.md`
 - `docs/EVALUATION_PLAN.md`
+- `docs/FINAL_EVALUATION_GUIDE.md`
+- `docs/DATASET_EXPANSION_REPORT.md`
+- `docs/DATASET_USAGE_GUIDE.md`
 - `docs/CURATED_DATASET_NOTES.md`
 - `docs/CURATED_DATASET_VALIDATION_REPORT.md`
 - `docs/EVALUATION_BASELINE_REPORT.md`

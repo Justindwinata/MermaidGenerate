@@ -22,8 +22,14 @@ Optional supporting datasets:
 - `datasets/curated/venn_curated.jsonl`
 - `datasets/examples/mindmap_examples.jsonl`
 - `datasets/examples/venn_examples.jsonl`
+- `datasets/expanded/mindmap_expanded.jsonl`
+- `datasets/expanded/venn_expanded.jsonl`
+- `datasets/expanded/mixed_mindmap_venn_expanded_500.jsonl`
+- `datasets/expanded/mixed_mindmap_venn_expanded_1000.jsonl`
+- `datasets/evaluation/final_eval_prompts_100.jsonl`
 
 The mixed curated dataset contains 150 validated samples: 75 Mind Map and 75 Venn.
+The expanded mixed datasets contain 500 and 1000 validated examples for stronger LoRA experiments.
 
 ## 3. Source Code
 
@@ -33,6 +39,8 @@ Submit:
 - `src/mermaid_generate/`
 - `requirements.txt`
 - `configs/lora_smoke_config.json`
+- `configs/lora_medium_dataset_config.json`
+- `configs/lora_expanded_dataset_config.json`
 - `scripts/`
 
 These files preserve the local web app, dataset validation, Mermaid repair, preview rendering, Transformers/PyTorch inference, training manager, and adapter handling.
@@ -51,6 +59,9 @@ Submit or reference:
 - `docs/FINAL_SUBMISSION_CHECKLIST.md`
 - `docs/SUBMISSION_GUIDE.md`
 - `docs/TROUBLESHOOTING.md` if present
+- `docs/DATASET_EXPANSION_REPORT.md`
+- `docs/DATASET_USAGE_GUIDE.md`
+- `docs/FINAL_EVALUATION_GUIDE.md`
 
 ## 5. Evidence
 
@@ -61,6 +72,9 @@ Include evidence docs and screenshots if required:
 - `docs/evidence/LOCAL_UI_REVISION_EVIDENCE.md`
 - `docs/evidence/SCREENSHOT_EVIDENCE_REPORT.md`
 - `docs/evidence/screenshots/`
+- `results/dataset_quality/expanded_dataset_summary.json`
+- `results/dataset_quality/expanded_dataset_summary.md`
+- `results/evaluation/final_eval_baseline.json`
 
 If a fresh Colab training demo is run, capture screenshots for:
 

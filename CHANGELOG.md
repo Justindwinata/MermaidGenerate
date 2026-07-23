@@ -29,3 +29,6 @@
 - Document local laptop and Colab/share launch modes with local smoke evidence.
 - Add MG-0006 final QA audit, final regression tests, stabilized notebook access notes, final submission package guide, and troubleshooting guide.
 - Verify final release readiness: notebook JSON, curated dataset, local/share launch config, Mermaid repair/preview tests, and Git hygiene without committed model artifacts.
+- Add MG-0007 expanded datasets: 500 Mind Map, 500 Venn, balanced 500/1000 mixed training datasets, and 100 final evaluation prompts.
+- Add deterministic dataset builder, expanded dataset validation, quality reports, final quality evaluation runner, and LoRA configs for smoke, medium, and expanded dataset runs.
+- Add expanded dataset regression tests and polish demo UI wording for dataset readiness and syntax-safety fallback.

@@ -28,6 +28,12 @@
 - [x] Curated Venn dataset exists.
 - [x] Curated mixed dataset exists.
 - [x] Manual evaluation prompts exist.
+- [x] Expanded Mind Map dataset exists with 500 rows.
+- [x] Expanded Venn dataset exists with 500 rows.
+- [x] Expanded mixed 500 dataset exists.
+- [x] Expanded mixed 1000 dataset exists.
+- [x] Final 100-prompt evaluation set exists.
+- [x] Expanded dataset quality report exists.
 
 ## Evidence Status
 
@@ -56,6 +62,8 @@ Current status: not completed locally because CUDA is unavailable.
 - [x] Evidence screenshots are lightweight.
 - [x] Tests pass.
 - [x] Curated dataset validation passes.
+- [x] Expanded dataset validation passes.
+- [x] Final validator-only quality evaluation passes.
 - [x] Large model/checkpoint outputs are not committed.
 
 ## Known Limitations to State

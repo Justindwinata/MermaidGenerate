@@ -104,3 +104,29 @@ Expanded datasets must satisfy:
 - Quick classroom demo: use the 150-row curated mixed dataset.
 - Balanced LoRA demo: use the 500-row expanded mixed dataset.
 - Better coverage experiment: use the 1000-row expanded mixed dataset if Colab time allows.
+
+## Final MG-0007 Result
+
+Generated files:
+
+- `datasets/expanded/mindmap_expanded.jsonl`: 500 rows
+- `datasets/expanded/venn_expanded.jsonl`: 500 rows
+- `datasets/expanded/mixed_mindmap_venn_expanded_500.jsonl`: 500 rows
+- `datasets/expanded/mixed_mindmap_venn_expanded_1000.jsonl`: 1000 rows
+- `datasets/evaluation/final_eval_prompts_100.jsonl`: 100 rows
+
+Validation result:
+
+- invalid rows: `0`
+- warning rows: `0`
+- duplicate prompts: `0`
+- duplicate completions: `0`
+- Venn undefined union references: `0`
+- Mind Map malformed roots: `0`
+
+Reports:
+
+- `results/dataset_quality/expanded_dataset_summary.json`
+- `results/dataset_quality/expanded_dataset_summary.md`
+
+The expanded dataset improves coverage for LoRA experiments, but it does not guarantee perfect model output. The runtime repair fallback remains the syntax-safety guard for final rendering.

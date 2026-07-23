@@ -27,6 +27,10 @@ This audit distinguishes between locally verified checks, user-side Colab eviden
 | Inference time is shown | Verified by code | `inference_time` textbox remains wired. |
 | JSON/JSONL dataset upload works | Verified by code/local screenshots | File upload and validation callback remain wired. |
 | Dataset validation works | Verified by tests/user evidence | Curated mixed dataset previously validated 150 valid, 0 invalid. |
+| Expanded datasets exist | Verified by tests | 500 Mind Map, 500 Venn, 500 mixed, and 1000 mixed rows exist. |
+| Expanded dataset validation passes | Verified by scripts/tests | `scripts/validate_expanded_dataset.py` reports invalid 0, warnings 0, duplicates 0. |
+| Final evaluation prompts exist | Verified by tests | `datasets/evaluation/final_eval_prompts_100.jsonl` has 50 Mind Map and 50 Venn prompts. |
+| Final validator-only evaluation passes | Verified locally | `scripts/run_final_quality_evaluation.py --validator-only` writes `results/evaluation/final_eval_baseline.json`. |
 | Dataset preview appears | Verified by code/screenshots | `gr.Dataframe` output remains wired. |
 | Diagram/source distribution appears | Verified by code/screenshots | Distribution textboxes remain wired. |
 | LoRA mode selectable | Verified by code | Fine-tuning dropdown includes `LoRA`. |
@@ -69,5 +73,6 @@ The repository is ready for final submission after MG-0006 validation:
 - curated dataset exists and validates in regression tests;
 - only `outputs/.gitkeep` is tracked under runtime outputs;
 - no adapter ZIP, checkpoint, or model weight artifacts are committed.
+- expanded datasets and validator-only reports are committed as lightweight assignment evidence.
 
 During the live demo, the student should capture fresh Colab screenshots for GPU runtime, training logs, completed adapter status, and adapter ZIP download if required by the lecturer.

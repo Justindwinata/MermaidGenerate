@@ -87,6 +87,11 @@ Upload:
 
 `datasets/curated/mixed_mindmap_venn_curated.jsonl`
 
+For a stronger dataset demo, also show:
+
+- `datasets/expanded/mixed_mindmap_venn_expanded_500.jsonl`
+- `datasets/expanded/mixed_mindmap_venn_expanded_1000.jsonl`
+
 ## 11. Validate Dataset
 
 Click **Validate Dataset**.
@@ -98,6 +103,8 @@ Show:
 - Invalid: 0
 - Mind Map: 75
 - Venn: 75
+
+If using the expanded 500 dataset, show 500 valid samples with 250 Mind Map and 250 Venn. If using the expanded 1000 dataset, show 1000 valid samples with 500 Mind Map and 500 Venn.
 
 ## 12. Select LoRA Mode
 
@@ -153,6 +160,8 @@ State:
 - Venn rendering depends on Mermaid.js support
 - llama.cpp/GGUF is future optional compatibility
 - no paid API is used
+
+For dataset quality, mention that MG-0007 adds 500 Mind Map examples, 500 Venn examples, balanced 500/1000 mixed datasets, and 100 final evaluation prompts. These improve coverage but do not remove the need for real training and validation.
 
 ## 19. Explain Render Reliability Fix
 

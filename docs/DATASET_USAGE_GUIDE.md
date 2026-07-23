@@ -16,8 +16,10 @@ Guide date: 2026-07-23 Asia/Jakarta
 Run:
 
 ```bash
+python scripts/build_expanded_dataset.py
 python scripts/validate_expanded_dataset.py
 python scripts/summarize_dataset_quality.py
+python scripts/run_final_quality_evaluation.py --validator-only
 ```
 
 Expected:
@@ -26,6 +28,12 @@ Expected:
 - duplicate rows: `0`
 - Venn undefined union references: `0`
 - Mind Map malformed root: `0`
+
+The generated reports are saved in:
+
+- `results/dataset_quality/expanded_dataset_summary.json`
+- `results/dataset_quality/expanded_dataset_summary.md`
+- `results/evaluation/final_eval_baseline.json`
 
 ## Colab Training Recommendation
 
