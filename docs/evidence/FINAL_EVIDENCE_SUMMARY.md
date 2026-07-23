@@ -1,9 +1,14 @@
 # Final Evidence Summary
 
-Summary date: 2026-07-22 Asia/Jakarta
+Summary date: 2026-07-23 Asia/Jakarta
 
 ## What Was Proven
 
+- Notebook file exists: `MermaidGenerate_Mindmap_Venn_Finetuning_WebUI.ipynb`.
+- Web app exists: `app.py`.
+- Source package exists: `src/mermaid_generate/`.
+- Example datasets exist under `datasets/examples/`.
+- Curated datasets exist under `datasets/curated/`, including `mixed_mindmap_venn_curated.jsonl`.
 - Dataset upload and validation were previously verified by user-side Colab testing.
 - LoRA training completed in user-side Colab testing and adapter ZIP was generated.
 - Initial post-training generation failed because raw model output was invalid.
@@ -12,6 +17,21 @@ Summary date: 2026-07-22 Asia/Jakarta
 - Render-fix screenshots exist under `docs/evidence/screenshots/fix/`.
 - A follow-up local browser smoke test confirmed that the iframe-based preview renders visible Mind Map and Venn SVG diagrams.
 - MG-0005 local-first launch smoke test returned `HTTP/1.1 200 OK` from `http://127.0.0.1:7860`.
+
+## Assignment Evidence Map
+
+| Area | Status | Evidence/Notes |
+|---|---:|---|
+| Notebook exists | Verified | `MermaidGenerate_Mindmap_Venn_Finetuning_WebUI.ipynb`. |
+| `app.py` exists | Verified | Local-first Gradio app entrypoint. |
+| Example datasets exist | Verified | `datasets/examples/mindmap_examples.jsonl`, `datasets/examples/venn_examples.jsonl`. |
+| Curated mixed dataset exists | Verified | `datasets/curated/mixed_mindmap_venn_curated.jsonl`. |
+| Generator tab evidence | Verified locally | Render-fix screenshots and code tests. |
+| Dataset validation evidence | Verified by screenshots/user Colab | 150 valid, 0 invalid/warnings/duplicates reported in manual test. |
+| Training evidence | Verified by user Colab screenshots | LoRA training completed with train/eval loss shown. |
+| Adapter ZIP evidence | Verified by user Colab screenshots | Adapter ZIP path shown in UI; ZIP should not be committed if large. |
+| Local mode evidence | Verified locally | `curl -I http://127.0.0.1:7860` returned `HTTP/1.1 200 OK`. |
+| Colab/share mode evidence | Ready/partially user-verified | Notebook uses `share=True`; user previously tested a `gradio.live` URL. Capture fresh final screenshots during demo. |
 
 ## What Was Fixed
 
@@ -47,4 +67,4 @@ Summary date: 2026-07-22 Asia/Jakarta
 
 ## Remaining Truth
 
-LoRA smoke training can complete and still produce imperfect syntax. The repair fallback is the runtime guard that guarantees valid Mermaid syntax for demo rendering.
+LoRA smoke training can complete and still produce imperfect syntax. The repair fallback is the runtime guard that guarantees valid Mermaid syntax for demo rendering. Fresh final Colab screenshots should be captured during the actual submission demo if the lecturer requires current runtime proof.
