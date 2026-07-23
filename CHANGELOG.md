@@ -27,3 +27,5 @@
 - Add MG-0005 local-first launch support with `--local`, `--share`, `--colab`, `--host`, and `--port`.
 - Redesign the Gradio UI with a navy/orange/black theme, cleaner Generator and Dataset & Fine-Tuning layouts, and dataset validation cards.
 - Document local laptop and Colab/share launch modes with local smoke evidence.
+- Add MG-0006 final QA audit, final regression tests, stabilized notebook access notes, final submission package guide, and troubleshooting guide.
+- Verify final release readiness: notebook JSON, curated dataset, local/share launch config, Mermaid repair/preview tests, and Git hygiene without committed model artifacts.

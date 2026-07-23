@@ -60,4 +60,14 @@ This audit distinguishes between locally verified checks, user-side Colab eviden
 
 ## Final Readiness Conclusion
 
-The repository is ready for final submission after running final validation and pushing all MG-0006 commits. During the live demo, the student should capture fresh Colab screenshots for GPU runtime, training logs, completed adapter status, and adapter ZIP download if required by the lecturer.
+The repository is ready for final submission after MG-0006 validation:
+
+- notebook JSON is valid;
+- final regression tests pass;
+- local-first launch is documented and previously smoke-tested;
+- Colab/share behavior is documented correctly;
+- curated dataset exists and validates in regression tests;
+- only `outputs/.gitkeep` is tracked under runtime outputs;
+- no adapter ZIP, checkpoint, or model weight artifacts are committed.
+
+During the live demo, the student should capture fresh Colab screenshots for GPU runtime, training logs, completed adapter status, and adapter ZIP download if required by the lecturer.
