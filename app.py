@@ -357,7 +357,8 @@ def generate_from_ui(
             preview,
             (
                 f"{result.validation_message}\n"
-                f"Fallback repair used: {result.repair_used}\n"
+                f"Syntax-safety fallback used: {result.repair_used}\n"
+                f"Repair/compile detail: {result.repair_message or 'Clean model output accepted.'}\n"
                 "The main code box contains the final validated Mermaid code used for preview."
             ),
             f"{result.inference_time_seconds:.2f} s",
@@ -417,6 +418,42 @@ def build_validation_cards_html(report: Any | None = None) -> str:
     return '<div class="mg-card-grid">' + "".join(cards) + "</div>"
 
 
+def build_dataset_readiness_advice(report: Any) -> str:
+    if report.error:
+        return f"Recommended action: fix dataset load error first: {report.error}"
+    if report.valid_samples == 0:
+        return "Recommended action: training is blocked because there are zero valid samples."
+
+    counts = report.diagram_type_counts or {}
+    mindmap_count = int(counts.get("mindmap", 0))
+    venn_count = int(counts.get("venn", 0))
+    total = max(1, report.valid_samples)
+    imbalance = abs(mindmap_count - venn_count) / total
+
+    advice: list[str] = []
+    if report.valid_samples < 150:
+        advice.append("Dataset is valid but small; use it only for quick callback testing.")
+    elif report.valid_samples < 500:
+        advice.append("Good for a quick LoRA smoke test.")
+    elif report.valid_samples < 1000:
+        advice.append("Good for medium LoRA training with better coverage.")
+    else:
+        advice.append("Good for expanded LoRA training if Colab runtime time is sufficient.")
+
+    if mindmap_count and venn_count and imbalance <= 0.1:
+        advice.append("Diagram balance looks healthy for mixed Mind Map and Venn training.")
+    elif mindmap_count and venn_count:
+        advice.append("Warning: diagram type imbalance is high; consider a balanced mixed dataset.")
+    else:
+        advice.append("Single-diagram-type dataset detected; useful for targeted training but not balanced mixed training.")
+
+    if report.warning_samples or report.invalid_samples or report.duplicate_count:
+        advice.append("Fix invalid, warning, or duplicate rows before final training.")
+    else:
+        advice.append("No invalid rows, warnings, or duplicate prompt-target pairs were found.")
+    return " ".join(advice)
+
+
 def validate_upload(file_obj: Any) -> tuple[list[list[Any]], str, str, str, str, str]:
     if file_obj is None:
         DATASET_STATE.update({"path": None, "report": None, "valid_data": []})
@@ -449,7 +486,8 @@ def validate_upload(file_obj: Any) -> tuple[list[list[Any]], str, str, str, str,
         f"Warnings: {report.warning_samples}\n"
         f"Duplicates: {report.duplicate_count}\n"
         f"Train ready: {report.train_ready}\n"
-        f"Error: {report.error or '-'}"
+        f"Error: {report.error or '-'}\n"
+        f"Training readiness: {build_dataset_readiness_advice(report)}"
     )
     invalid_text = "\n".join(
         f"Row {row['row_index']}: {', '.join(row['reasons'])}"
@@ -618,9 +656,12 @@ def build_app() -> Any:
                         gr.Examples(
                             examples=[
                                 ["Mind Map", "Buat mind map tentang strategi belajar AI untuk mahasiswa informatika."],
-                                ["Mind Map", "Create a mind map about digital marketing for a small food business."],
+                                ["Mind Map", "Susun mind map untuk presentasi tentang rencana tugas akhir aplikasi AI, gunakan 4 cabang utama."],
+                                ["Mind Map", "Create a detailed mind map about cybersecurity fundamentals for computer science students."],
+                                ["Mind Map", "Create a mind map about digital marketing for a small food business with concise labels."],
                                 ["Venn Diagram", "Create a Venn diagram comparing students, employees, and entrepreneurs."],
                                 ["Venn Diagram", "Buat diagram Venn tentang Instagram, TikTok, dan WhatsApp marketing."],
+                                ["Venn Diagram", "Compare Python, JavaScript, and Java using a Venn diagram with concise overlap labels."],
                                 ["Auto Detect", "Compare cloud computing, edge computing, and on-premise infrastructure."],
                             ],
                             inputs=[diagram_type, prompt],
@@ -680,7 +721,9 @@ def build_app() -> Any:
             with gr.Tab("Dataset & Fine-Tuning"):
                 gr.Markdown(
                     "Upload JSON/JSONL with messages, prompt-completion, or instruction-output samples. "
-                    "For the final demo, use `datasets/curated/mixed_mindmap_venn_curated.jsonl`. "
+                    "Use `datasets/curated/mixed_mindmap_venn_curated.jsonl` for a quick smoke test, "
+                    "`datasets/expanded/mixed_mindmap_venn_expanded_500.jsonl` for medium LoRA training, "
+                    "or `datasets/expanded/mixed_mindmap_venn_expanded_1000.jsonl` when Colab time is sufficient. "
                     "Training is allowed only after validation finds at least one valid sample."
                 )
                 dataset_file = gr.File(
@@ -728,8 +771,9 @@ def build_app() -> Any:
 
                 gr.Markdown("### Fine-Tuning", elem_classes=["mg-section-title"])
                 gr.Markdown(
-                    "Recommended LoRA smoke values: 1 epoch, batch size 1, gradient accumulation 4, "
-                    "max sequence length 512, learning rate 2e-4, validation split 0.1. "
+                    "Recommended LoRA smoke values: 150 curated examples, 1 epoch, batch size 1, "
+                    "gradient accumulation 4, max sequence length 512, learning rate 2e-4, validation split 0.1. "
+                    "For better quality, use the expanded 500 dataset first; use the 1000 dataset only if runtime time allows. "
                     "Training is real; click Refresh Status to read real progress, loss logs, result summary, "
                     "adapter activation status, and adapter ZIP path."
                 )
@@ -744,7 +788,7 @@ def build_app() -> Any:
                 with gr.Row():
                     batch_size = gr.Number(value=1, label="batch size", precision=0)
                     gradient_accumulation = gr.Number(value=4, label="gradient accumulation", precision=0)
-                    max_seq_length = gr.Number(value=1024, label="max sequence length", precision=0)
+                    max_seq_length = gr.Number(value=512, label="max sequence length", precision=0)
                     validation_split = gr.Slider(0.0, 0.5, value=0.1, step=0.05, label="validation split ratio")
 
                 with gr.Row():
