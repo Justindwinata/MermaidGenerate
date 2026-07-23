@@ -44,6 +44,8 @@ Run the Gradio app cell and open the public/local URL.
 
 Say: "In Colab this uses a public Gradio share link. On a local laptop the same app runs at `http://127.0.0.1:7860` without Gradio Live. The app has two main tabs: Generator Mermaid and Dataset & Fine-Tuning."
 
+In Colab, open the generated `https://xxxxx.gradio.live` link. Do not open `0.0.0.0:7860`.
+
 ## 6. Open Generator Mermaid Tab
 
 Show the model/adaptor status and generation controls.
@@ -157,3 +159,34 @@ State:
 Say:
 
 "The LoRA adapter can still produce imperfect raw text after a short smoke training run. To make the demo reliable, the app now extracts the first Mermaid diagram, repairs or compiles a deterministic valid fallback, validates it, and only then renders. The main code box shows final valid Mermaid code. Raw model output is available only in the debug section."
+
+## 20. Show Local Demo Alternative
+
+If the lecturer asks for local laptop execution, run:
+
+```bash
+python app.py --local
+```
+
+Open:
+
+```text
+http://127.0.0.1:7860
+```
+
+Say: "`127.0.0.1` works only when the app is running on the same machine as the browser. Colab uses `gradio.live` instead."
+
+## 21. Final Submission Package
+
+Show:
+
+- notebook file;
+- curated mixed dataset;
+- `app.py`;
+- `src/mermaid_generate/`;
+- README and docs;
+- final QA audit;
+- evidence screenshots if captured;
+- GitHub repository link.
+
+Say: "Adapter ZIPs and checkpoints are generated during training but should not be committed if large. The repository keeps `outputs/` gitignored except `.gitkeep`."

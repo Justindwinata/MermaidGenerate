@@ -10,6 +10,8 @@
 - [x] Documentation exists: `docs/`
 - [x] Local run guide exists: `docs/LOCAL_RUN_GUIDE.md`
 - [x] Local UI revision plan exists: `docs/LOCAL_UI_REVISION_PLAN.md`
+- [x] Final QA audit exists: `docs/FINAL_QA_AUDIT.md`
+- [x] Final submission package guide exists: `docs/FINAL_SUBMISSION_PACKAGE.md`
 
 ## Launch Modes
 
@@ -54,6 +56,7 @@ Current status: not completed locally because CUDA is unavailable.
 - [x] Evidence screenshots are lightweight.
 - [x] Tests pass.
 - [x] Curated dataset validation passes.
+- [x] Large model/checkpoint outputs are not committed.
 
 ## Known Limitations to State
 

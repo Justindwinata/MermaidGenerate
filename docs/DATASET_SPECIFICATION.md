@@ -41,6 +41,21 @@ Every valid sample is normalized to:
 
 The validator checks file format, required fields, empty prompt/target, target prefix, markdown fences, type mismatch, target length, duplicates, distributions, invalid rows, and train readiness.
 
+The final curated mixed dataset is:
+
+```text
+datasets/curated/mixed_mindmap_venn_curated.jsonl
+```
+
+Expected distribution:
+
+- 75 Mind Map samples
+- 75 Venn samples
+- 150 total valid samples
+- 0 duplicates
+
+Training should not start if validation reports zero valid samples or unresolved invalid rows.
+
 ## Venn Syntax Alignment
 
 Assignment-facing Venn targets start with `venn`, but must use renderer-safe union text blocks:

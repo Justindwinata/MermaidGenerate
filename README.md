@@ -52,6 +52,8 @@ No paid API is used.
 
 Colab usually needs a Gradio public link because Colab localhost is not directly accessible from your laptop browser.
 
+Important: do not open `0.0.0.0:7860` in your browser. In Colab, open the generated `https://xxxxx.gradio.live` URL.
+
 ## Run Locally
 
 ```bash
@@ -72,6 +74,8 @@ python app.py --local --port 7861
 python app.py --share
 python app.py --colab
 ```
+
+Use `127.0.0.1` only when the app is running on the same machine as the browser.
 
 ## Dataset Files
 
@@ -158,6 +162,8 @@ Final demo materials:
 
 - `docs/FINAL_DEMO_SCRIPT.md`
 - `docs/FINAL_SUBMISSION_CHECKLIST.md`
+- `docs/FINAL_QA_AUDIT.md`
+- `docs/FINAL_SUBMISSION_PACKAGE.md`
 
 ## MG-0004 Render Fix
 
@@ -209,6 +215,8 @@ Latest render fix evidence:
 - `docs/LOCAL_UI_REVISION_PLAN.md`
 - `docs/SCREENSHOT_CAPTURE_PLAN.md`
 - `docs/SUBMISSION_GUIDE.md`
+- `docs/FINAL_QA_AUDIT.md`
+- `docs/FINAL_SUBMISSION_PACKAGE.md`
 - `docs/FINAL_DEMO_SCRIPT.md`
 - `docs/FINAL_SUBMISSION_CHECKLIST.md`
 - `docs/evidence/`

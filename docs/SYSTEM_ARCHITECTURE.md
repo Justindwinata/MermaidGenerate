@@ -39,6 +39,18 @@ The UI remains Gradio Blocks and keeps two primary tabs:
 
 The visual theme uses a dark black/navy base with orange primary actions. The preview renderer remains the iframe-based Mermaid.js renderer so generated Mind Map and Venn diagrams display as SVG instead of plain text.
 
+## Reliability Layer
+
+Generation does not send raw model output directly to the preview renderer. The runtime applies:
+
+1. first Mermaid diagram extraction;
+2. safe Mind Map or Venn repair/compile fallback;
+3. Mermaid validation;
+4. Venn `venn` to `venn-beta` renderer conversion;
+5. iframe Mermaid preview rendering.
+
+This keeps the demo stable even when a short LoRA smoke run produces imperfect raw text.
+
 ## Storage
 
 Training outputs are written to `outputs/`, which is gitignored except for `.gitkeep`.
