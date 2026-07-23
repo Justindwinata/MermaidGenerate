@@ -1,0 +1,232 @@
+{
+  "generated_on": "2026-07-23",
+  "all_passed": true,
+  "datasets": [
+    {
+      "file": "datasets/expanded/mindmap_expanded.jsonl",
+      "total_examples": 500,
+      "mindmap_count": 500,
+      "venn_count": 0,
+      "language_distribution": {
+        "en": 241,
+        "id": 259
+      },
+      "domain_distribution": {
+        "academic": 99,
+        "business": 49,
+        "data": 52,
+        "education": 106,
+        "general": 47,
+        "security": 50,
+        "technology": 97
+      },
+      "average_prompt_length": 124.39,
+      "average_completion_length": 315.13,
+      "duplicate_prompt_count": 0,
+      "duplicate_completion_count": 0,
+      "invalid_count": 0,
+      "warning_count": 0,
+      "venn_undefined_union_count": 0,
+      "mindmap_missing_root_count": 0,
+      "balanced": false,
+      "pass": true,
+      "recommendation": "Use for faster LoRA training and iteration.",
+      "sample_examples": [
+        {
+          "id": "mindmap-9809974e36dc76",
+          "prompt": "Buat mind map tentang Strategi Belajar AI. Untuk mahasiswa baru. Fokus pada pemahaman dasar. Gunakan struktur ringkas. Buat untuk demo tugas akhir.",
+          "completion": "mindmap\n  root((Strategi Belajar AI))\n    Dasar AI\n      Machine Learning\n      Deep Learning\n        Contoh\n    Praktik\n      Eksperimen Model\n      Evaluasi\n      Proyek Kecil\n    Tools\n      Library AI\n      Python\n    Konteks\n      Audiens Mahasiswa Baru\n      Fokus Pemahaman Dasar",
+          "language": "id",
+          "domain": "education",
+          "complexity": "simple"
+        },
+        {
+          "id": "mindmap-fd66af6d3446ff",
+          "prompt": "Generate a Mermaid mindmap for Software Engineering. For first-year students. Focus on basic understanding.",
+          "completion": "mindmap\n  root((Software Engineering))\n    Design\n      APIs\n      Database\n      Architecture\n    Implementation\n      Version Control\n      Coding\n    Testing\n      Unit Tests\n      Integration\n      Regression\n    Release\n      Monitoring\n      Rollback\n    Context\n      Audience First-Year Students\n      Focus Basic Understanding",
+          "language": "en",
+          "domain": "technology",
+          "complexity": "medium"
+        }
+      ]
+    },
+    {
+      "file": "datasets/expanded/venn_expanded.jsonl",
+      "total_examples": 500,
+      "mindmap_count": 0,
+      "venn_count": 500,
+      "language_distribution": {
+        "en": 250,
+        "id": 250
+      },
+      "domain_distribution": {
+        "ai": 34,
+        "business": 34,
+        "cloud": 34,
+        "data": 33,
+        "devops": 33,
+        "education": 33,
+        "frontend": 33,
+        "health": 33,
+        "marketing": 33,
+        "presentation": 33,
+        "programming": 34,
+        "skills": 33,
+        "social": 34,
+        "software": 66
+      },
+      "average_prompt_length": 127.72,
+      "average_completion_length": 257.88,
+      "duplicate_prompt_count": 0,
+      "duplicate_completion_count": 0,
+      "invalid_count": 0,
+      "warning_count": 0,
+      "venn_undefined_union_count": 0,
+      "mindmap_missing_root_count": 0,
+      "balanced": false,
+      "pass": true,
+      "recommendation": "Use for faster LoRA training and iteration.",
+      "sample_examples": [
+        {
+          "id": "venn-e8fc240b120a3e",
+          "prompt": "Buat diagram Venn tentang Instagram, dan TikTok. Untuk mahasiswa baru. Fokus pada pemahaman dasar. Gunakan label overlap singkat. Cocok untuk presentasi kelas.",
+          "completion": "venn\n  set A[\"Instagram\"]\n  set B[\"TikTok\"]\n  union A,B\n    text \"Interaksi Audiens for Pemahaman Dasar\"",
+          "language": "id",
+          "domain": "business",
+          "complexity": "simple"
+        },
+        {
+          "id": "venn-b3f819c8f61f2e",
+          "prompt": "Compare Students, Workers, and Entrepreneurs using a Venn diagram. For first-year students. Focus on basic understanding.",
+          "completion": "venn\n  set A[\"Students\"]\n  set B[\"Workers\"]\n  set C[\"Entrepreneurs\"]\n  union A,B\n    text \"Student Founders for Basic Understanding\"\n  union A,C\n    text \"Side Business for First-Year Students\"\n  union B,C\n    text \"Career Growth for Basic Understanding\"\n  union A,B,C\n    text \"Working Students for First-Year Students\"",
+          "language": "en",
+          "domain": "social",
+          "complexity": "medium"
+        }
+      ]
+    },
+    {
+      "file": "datasets/expanded/mixed_mindmap_venn_expanded_500.jsonl",
+      "total_examples": 500,
+      "mindmap_count": 250,
+      "venn_count": 250,
+      "language_distribution": {
+        "en": 250,
+        "id": 250
+      },
+      "domain_distribution": {
+        "academic": 50,
+        "ai": 17,
+        "business": 42,
+        "cloud": 17,
+        "data": 42,
+        "devops": 16,
+        "education": 67,
+        "frontend": 16,
+        "general": 25,
+        "health": 16,
+        "marketing": 17,
+        "presentation": 17,
+        "programming": 17,
+        "security": 25,
+        "skills": 16,
+        "social": 17,
+        "software": 33,
+        "technology": 50
+      },
+      "average_prompt_length": 124.66,
+      "average_completion_length": 285.64,
+      "duplicate_prompt_count": 0,
+      "duplicate_completion_count": 0,
+      "invalid_count": 0,
+      "warning_count": 0,
+      "venn_undefined_union_count": 0,
+      "mindmap_missing_root_count": 0,
+      "balanced": true,
+      "pass": true,
+      "recommendation": "Use for faster LoRA training and iteration.",
+      "sample_examples": [
+        {
+          "id": "mindmap-9809974e36dc76",
+          "prompt": "Buat mind map tentang Strategi Belajar AI. Untuk mahasiswa baru. Fokus pada pemahaman dasar. Gunakan struktur ringkas. Buat untuk demo tugas akhir.",
+          "completion": "mindmap\n  root((Strategi Belajar AI))\n    Dasar AI\n      Machine Learning\n      Deep Learning\n        Contoh\n    Praktik\n      Eksperimen Model\n      Evaluasi\n      Proyek Kecil\n    Tools\n      Library AI\n      Python\n    Konteks\n      Audiens Mahasiswa Baru\n      Fokus Pemahaman Dasar",
+          "language": "id",
+          "domain": "education",
+          "complexity": "simple"
+        },
+        {
+          "id": "venn-e8fc240b120a3e",
+          "prompt": "Buat diagram Venn tentang Instagram, dan TikTok. Untuk mahasiswa baru. Fokus pada pemahaman dasar. Gunakan label overlap singkat. Cocok untuk presentasi kelas.",
+          "completion": "venn\n  set A[\"Instagram\"]\n  set B[\"TikTok\"]\n  union A,B\n    text \"Interaksi Audiens for Pemahaman Dasar\"",
+          "language": "id",
+          "domain": "business",
+          "complexity": "simple"
+        }
+      ]
+    },
+    {
+      "file": "datasets/expanded/mixed_mindmap_venn_expanded_1000.jsonl",
+      "total_examples": 1000,
+      "mindmap_count": 500,
+      "venn_count": 500,
+      "language_distribution": {
+        "en": 491,
+        "id": 509
+      },
+      "domain_distribution": {
+        "academic": 99,
+        "ai": 34,
+        "business": 83,
+        "cloud": 34,
+        "data": 85,
+        "devops": 33,
+        "education": 139,
+        "frontend": 33,
+        "general": 47,
+        "health": 33,
+        "marketing": 33,
+        "presentation": 33,
+        "programming": 34,
+        "security": 50,
+        "skills": 33,
+        "social": 34,
+        "software": 66,
+        "technology": 97
+      },
+      "average_prompt_length": 126.06,
+      "average_completion_length": 286.5,
+      "duplicate_prompt_count": 0,
+      "duplicate_completion_count": 0,
+      "invalid_count": 0,
+      "warning_count": 0,
+      "venn_undefined_union_count": 0,
+      "mindmap_missing_root_count": 0,
+      "balanced": true,
+      "pass": true,
+      "recommendation": "Use when there is enough Colab time for stronger LoRA training.",
+      "sample_examples": [
+        {
+          "id": "mindmap-9809974e36dc76",
+          "prompt": "Buat mind map tentang Strategi Belajar AI. Untuk mahasiswa baru. Fokus pada pemahaman dasar. Gunakan struktur ringkas. Buat untuk demo tugas akhir.",
+          "completion": "mindmap\n  root((Strategi Belajar AI))\n    Dasar AI\n      Machine Learning\n      Deep Learning\n        Contoh\n    Praktik\n      Eksperimen Model\n      Evaluasi\n      Proyek Kecil\n    Tools\n      Library AI\n      Python\n    Konteks\n      Audiens Mahasiswa Baru\n      Fokus Pemahaman Dasar",
+          "language": "id",
+          "domain": "education",
+          "complexity": "simple"
+        },
+        {
+          "id": "venn-e8fc240b120a3e",
+          "prompt": "Buat diagram Venn tentang Instagram, dan TikTok. Untuk mahasiswa baru. Fokus pada pemahaman dasar. Gunakan label overlap singkat. Cocok untuk presentasi kelas.",
+          "completion": "venn\n  set A[\"Instagram\"]\n  set B[\"TikTok\"]\n  union A,B\n    text \"Interaksi Audiens for Pemahaman Dasar\"",
+          "language": "id",
+          "domain": "business",
+          "complexity": "simple"
+        }
+      ]
+    }
+  ],
+  "demo_recommendation": {
+    "quick_smoke": "datasets/curated/mixed_mindmap_venn_curated.jsonl",
+    "medium_training": "datasets/expanded/mixed_mindmap_venn_expanded_500.jsonl",
+    "larger_training": "datasets/expanded/mixed_mindmap_venn_expanded_1000.jsonl"
+  }
+}
