@@ -167,13 +167,14 @@ def test_notebook_json_and_required_sections_exist() -> None:
     required_phrases = [
         "Project Overview",
         "Install Dependencies",
-        "Restart runtime note",
+        "Restart Runtime Note",
         "Import Libraries",
-        "GPU and Runtime Check",
+        "GPU Check",
         "Dataset Upload and Validation",
-        "Mermaid Validator and Preview Renderer",
-        "Model Loading with Transformers and PyTorch",
-        "Mermaid Inference",
+        "Mermaid Validation and Preview",
+        "Model Loading",
+        "Inference",
+        "Fine-Tuning Modes",
         "LoRA / QLoRA / Full Fine-Tuning",
         "Gradio Web App",
         "Local laptop",
@@ -181,6 +182,8 @@ def test_notebook_json_and_required_sections_exist() -> None:
         "Common errors",
         "Limitations",
         "Submission Guide",
+        "Do not open `0.0.0.0:7860`",
+        "gradio.live",
     ]
 
     for phrase in required_phrases:
