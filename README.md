@@ -217,6 +217,7 @@ Latest render fix evidence:
 - `docs/SUBMISSION_GUIDE.md`
 - `docs/FINAL_QA_AUDIT.md`
 - `docs/FINAL_SUBMISSION_PACKAGE.md`
+- `docs/TROUBLESHOOTING.md`
 - `docs/FINAL_DEMO_SCRIPT.md`
 - `docs/FINAL_SUBMISSION_CHECKLIST.md`
 - `docs/evidence/`

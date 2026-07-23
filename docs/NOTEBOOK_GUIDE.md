@@ -41,3 +41,7 @@ python app.py --colab
 ```
 
 Colab usually needs a temporary public Gradio link because the Colab localhost server is not directly exposed to your laptop browser.
+
+Do not open `0.0.0.0:7860` in your browser. Open the generated `gradio.live` link in Colab, or use `http://127.0.0.1:7860` only for local laptop mode.
+
+For common runtime issues, see `docs/TROUBLESHOOTING.md`.

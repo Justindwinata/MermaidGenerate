@@ -65,6 +65,8 @@ python app.py --share
 
 The notebook can also call the app launch function with `share=True`.
 
+Open the generated `https://xxxxx.gradio.live` URL in your browser. Do not open `0.0.0.0:7860`; `0.0.0.0` is only a server bind address.
+
 ## Smoke Test Prompts
 
 Mind Map:
@@ -102,3 +104,12 @@ Expected:
 - QLoRA requires compatible CUDA and bitsandbytes.
 - llama.cpp/GGUF remains future optional compatibility.
 - No paid API is used.
+
+## More Troubleshooting
+
+See `docs/TROUBLESHOOTING.md` for:
+
+- `0.0.0.0` vs `127.0.0.1` vs `gradio.live`;
+- Mermaid preview issues;
+- CUDA/QLoRA/Full Fine-Tuning errors;
+- missing adapter ZIP output.
