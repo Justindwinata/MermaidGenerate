@@ -1,6 +1,7 @@
 {
   "mode": "LoRA",
   "dataset_path": "datasets/curated/mixed_mindmap_venn_curated.jsonl",
+  "expected_use_case": "Quick Colab smoke test with the 150-sample curated dataset.",
   "max_samples": 32,
   "epochs": 1,
   "batch_size": 1,
@@ -12,6 +13,7 @@
   "expected_output_root": "outputs/adapters/",
   "notes": [
     "Use a Colab GPU runtime for this smoke test.",
+    "This config verifies the training pipeline and adapter ZIP flow; it is not meant to produce the strongest model.",
     "Do not claim training success unless a real run completes.",
     "If CUDA OOM occurs, reduce max_samples or max_sequence_length."
   ]

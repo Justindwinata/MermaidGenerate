@@ -1,0 +1,20 @@
+{
+  "mode": "LoRA",
+  "dataset_path": "datasets/expanded/mixed_mindmap_venn_expanded_500.jsonl",
+  "expected_use_case": "Balanced medium LoRA training with 500 examples for a better demo than the smoke dataset.",
+  "max_samples": 500,
+  "epochs": 1,
+  "batch_size": 1,
+  "gradient_accumulation": 4,
+  "max_sequence_length": 512,
+  "learning_rate": 0.0002,
+  "validation_split": 0.1,
+  "model_id": "TinyLlama/TinyLlama-1.1B-Chat-v1.0",
+  "expected_output_root": "outputs/adapters/",
+  "colab_gpu_note": "Recommended for a Colab T4/L4 GPU runtime. Training time is longer than the smoke config.",
+  "notes": [
+    "Use this when the demo has enough time for more examples than the curated smoke set.",
+    "Keep batch size 1 on limited VRAM and increase gradient accumulation if needed.",
+    "If CUDA OOM occurs, reduce max_samples or max_sequence_length."
+  ]
+}

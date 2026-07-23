@@ -1,0 +1,20 @@
+{
+  "mode": "LoRA",
+  "dataset_path": "datasets/expanded/mixed_mindmap_venn_expanded_1000.jsonl",
+  "expected_use_case": "Larger balanced LoRA training with 1,000 examples when Colab runtime duration and GPU memory are sufficient.",
+  "max_samples": 1000,
+  "epochs": 1,
+  "batch_size": 1,
+  "gradient_accumulation": 4,
+  "max_sequence_length": 512,
+  "learning_rate": 0.0002,
+  "validation_split": 0.1,
+  "model_id": "TinyLlama/TinyLlama-1.1B-Chat-v1.0",
+  "expected_output_root": "outputs/adapters/",
+  "colab_gpu_note": "Use a stable Colab GPU session. Consider 1 epoch first, then 2 epochs only if time permits.",
+  "notes": [
+    "Do not claim this large config was trained unless a real run completes.",
+    "Adapter ZIP files are generated during training and should not be committed if large.",
+    "Fallback repair remains enabled even after training because small models can still produce invalid Mermaid syntax."
+  ]
+}

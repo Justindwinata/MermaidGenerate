@@ -4,10 +4,38 @@
 
 Start with LoRA. It is the most practical mode for Colab-scale experiments.
 
+## Dataset Choices
+
+Use the dataset size that matches the available demo time.
+
+- Quick smoke test: `datasets/curated/mixed_mindmap_venn_curated.jsonl` with `configs/lora_smoke_config.json`.
+- Medium training: `datasets/expanded/mixed_mindmap_venn_expanded_500.jsonl` with `configs/lora_medium_dataset_config.json`.
+- Larger training: `datasets/expanded/mixed_mindmap_venn_expanded_1000.jsonl` with `configs/lora_expanded_dataset_config.json`.
+
 Recommended smoke values:
 
 - dataset: `datasets/curated/mixed_mindmap_venn_curated.jsonl`
 - epochs: `1`
+- batch size: `1`
+- gradient accumulation: `4`
+- max sequence length: `512`
+- learning rate: `2e-4`
+- validation split: `0.1`
+
+Recommended medium values:
+
+- dataset: `datasets/expanded/mixed_mindmap_venn_expanded_500.jsonl`
+- epochs: `1`
+- batch size: `1`
+- gradient accumulation: `4`
+- max sequence length: `512`
+- learning rate: `2e-4`
+- validation split: `0.1`
+
+Recommended expanded values:
+
+- dataset: `datasets/expanded/mixed_mindmap_venn_expanded_1000.jsonl`
+- epochs: `1` first, `2` only if the Colab GPU session has enough time
 - batch size: `1`
 - gradient accumulation: `4`
 - max sequence length: `512`
@@ -38,3 +66,5 @@ LoRA smoke training can complete successfully while the model still produces imp
 ## Demo Honesty
 
 Do not claim training success unless the UI reports completed status and real logs/loss are visible. If CUDA is unavailable or a training mode fails because of memory or bitsandbytes compatibility, report the exact error and switch to LoRA or smaller settings.
+
+The expanded datasets improve coverage, but they do not guarantee perfect model behavior. TinyLlama can still need the runtime repair fallback for strict Mermaid syntax.
