@@ -2,6 +2,31 @@
 
 Use this guide when preparing the final academic submission for MermaidGenerate.
 
+The lecturer requires three main items:
+
+1. notebook with inference, dataset upload, and training/fine-tuning;
+2. varied dataset;
+3. video that demonstrates the application works.
+
+MG-0008 prepares these requirements through the final ZIP package and video script docs.
+
+## 0. Final ZIP Package
+
+Generate the final package locally:
+
+```bash
+python3 scripts/build_submission_package.py
+python3 scripts/verify_submission_package.py
+```
+
+Expected output:
+
+```text
+dist/MermaidGenerate_Final_Submission.zip
+```
+
+The ZIP includes notebook, datasets, source code, important docs, reports, manifest, and video demo scripts. It excludes large model checkpoints, adapters, caches, virtual environments, and generated training outputs.
+
 ## 1. Primary Notebook
 
 Submit:
@@ -106,6 +131,18 @@ Submit or show:
 ```text
 https://github.com/Justindwinata/MermaidGenerate
 ```
+
+## 7A. Video Demo Materials
+
+Use these files to record the lecturer video:
+
+- `docs/VIDEO_DEMO_SCRIPT_DETAILED.md`
+- `docs/VIDEO_DEMO_CHECKLIST.md`
+- `docs/VIDEO_DEMO_NARRATION_SHORT.md`
+- `docs/VIDEO_DEMO_NARRATION_FULL.md`
+- `docs/NOTEBOOK_CELL_WALKTHROUGH.md`
+- `docs/SOURCE_CODE_WALKTHROUGH.md`
+- `docs/DATASET_VIDEO_EXPLANATION.md`
 
 ## 8. Final Demo Access Modes
 
