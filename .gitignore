@@ -28,3 +28,7 @@ tmp/
 uploads/
 wandb/
 runs/
+
+# Generated submission package
+dist/*
+!dist/.gitkeep
