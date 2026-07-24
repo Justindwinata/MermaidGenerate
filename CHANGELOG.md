@@ -32,3 +32,5 @@
 - Add MG-0007 expanded datasets: 500 Mind Map, 500 Venn, balanced 500/1000 mixed training datasets, and 100 final evaluation prompts.
 - Add deterministic dataset builder, expanded dataset validation, quality reports, final quality evaluation runner, and LoRA configs for smoke, medium, and expanded dataset runs.
 - Add expanded dataset regression tests and polish demo UI wording for dataset readiness and syntax-safety fallback.
+- Add MG-0008 final submission README, manifest, ZIP packaging scripts, verification script, detailed Indonesian video demo script, narration scripts, notebook/source walkthroughs, and dataset video explanation.
+- Verify local final submission package generation at `dist/MermaidGenerate_Final_Submission.zip`; ZIP remains an ignored reproducible build artifact.

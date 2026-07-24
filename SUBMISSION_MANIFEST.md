@@ -64,3 +64,7 @@ If the ZIP is not committed, regenerate it with:
 python3 scripts/build_submission_package.py
 python3 scripts/verify_submission_package.py
 ```
+
+## MG-0008 Packaging Status
+
+The package scripts are committed. The ZIP itself is generated locally and ignored by Git so the repository does not store reproducible archive artifacts or accidental training outputs.

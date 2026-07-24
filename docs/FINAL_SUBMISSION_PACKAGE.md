@@ -27,6 +27,14 @@ dist/MermaidGenerate_Final_Submission.zip
 
 The ZIP includes notebook, datasets, source code, important docs, reports, manifest, and video demo scripts. It excludes large model checkpoints, adapters, caches, virtual environments, and generated training outputs.
 
+Latest MG-0008 local package verification:
+
+- build command: `python3 scripts/build_submission_package.py`
+- verify command: `python3 scripts/verify_submission_package.py`
+- result: PASS
+- local ZIP path: `dist/MermaidGenerate_Final_Submission.zip`
+- ZIP is generated locally and intentionally not committed because `dist/` artifacts are reproducible build outputs.
+
 ## 1. Primary Notebook
 
 Submit:
@@ -174,3 +182,17 @@ The submitted project should clearly state:
 - llama.cpp/GGUF is future optional compatibility only;
 - model quality depends on dataset and training;
 - fallback repair is used to guarantee valid Mermaid syntax for rendering.
+
+## 10. Regenerate Package
+
+If the ZIP is missing or stale, regenerate it from the clean repository:
+
+```bash
+python3 scripts/build_submission_package.py
+python3 scripts/verify_submission_package.py
+```
+
+Then submit:
+
+- `dist/MermaidGenerate_Final_Submission.zip` if a ZIP package is requested;
+- or the notebook, dataset, and video separately if the lecturer requests individual files.
